@@ -32,8 +32,10 @@ class Workspace(QWidget):
     '''
     image_buffer: ImageBuffer
 
+
     def __init__(self):
         super().__init__()
+        self.setProperty('class', 'workspace')
         self.image_buffer = ImageBuffer(self)  # create an image label
 
         # * This is a temporary solution

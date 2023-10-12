@@ -35,6 +35,7 @@ class Assets(Enum):
     ICONS = "resources/img/static/"
     TEST_IMAGES = "resources/img/test/"
     TEMP_IMAGES = "resources/img/temp/"
+    THEMES = "resources/themes/"
     # Fonts
     # Sounds
     # Music

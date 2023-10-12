@@ -7,86 +7,90 @@ from PyQt6.QtCore import Qt, QTimer
 
 
 @dataclass
-class LoadingScreen(QWidget):
+class LoadingScreen(QFrame):
     '''
     A progress bar with a custom style
     '''
-    progress_bar: QProgressBar
     title_bar: QLabel
-    loading_screen: QFrame
+    progress_bar: QProgressBar
     timer: QTimer
     progress: int = 0
 
 
     def __init__(self):
         super().__init__()
-        # set the window size
+        self.setProperty('class', 'loading_screen')
         self.setWindowTitle('Loading Scren')
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
         self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.setFixedSize(420, 240)
-        # set QWidgets...
-        self.loading_screen = QFrame(self)
-        self.set_image('resources\\static\\cells.png', 82, 0)
+
+        self.set_image('resources\\img\\static\\philosophers-stone.png')
         self.set_title_bar()
-        self.set_progress_bar()        
+        self.set_progress_bar()
+
         # set the timer
         self.timer = QTimer()
-        self.progress = 0
-        self.timer.timeout.connect(loading)
-        self.timer.start(100)
+        self.timer.timeout.connect(self.loading)
+        self.timer.start(20)
 
 
-    def set_image(self, path: str, x: int, y: int) -> None:
+    def set_image(self, path: str, x: int = 82, y: int = 0) -> None:
         '''
         Set one image in the loading screen at the given position
         '''
-        icon = QImage(path)
-        icon = icon.scaled(256, 256, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
-        icon_label = QLabel(self.loading_screen)
+        icon_label = QLabel(self)
         icon_label.move(x, y)
         icon_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        icon_label.setPixmap(QPixmap.fromImage(icon))
+        icon_label.setPixmap(
+            QPixmap.fromImage(
+                QImage(path).scaled(256, 256, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+            )
+        )
 
 
     def set_title_bar(self) -> None:
         '''
         Set the title bar of the loading screen
         '''
-        self.title_bar = QLabel(self.loading_screen)
+        self.title_bar = QLabel(self)
+        self.title_bar.setFont(QFont('Segoe Print', 64, QFont.Weight.Bold))
         self.title_bar.setGeometry(0, 0, 420, 240)
         self.title_bar.setText('Canvas')
-        self.title_bar.setFont(QFont('Segoe Print', 64, QFont.Weight.Bold))
-        self.title_bar.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+
+        # Create another QLabel a little bit smaller to create a border effect
+        self.title_bar_border = QLabel(self)
+        self.title_bar_border.setFont(QFont('Segoe Print', 72, QFont.Weight.Bold))
+        self.title_bar.setStyleSheet('QLabel {color: #FFD700;}')
+        self.title_bar_border.setGeometry(0, 0, 420, 240)
+        self.title_bar_border.setText('Canvas')
+
+        # set the alignment of the title bar
+        self.title_bar_border.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.title_bar.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
 
     def set_progress_bar(self):
         # ? Set progress bar
-        self.progress_bar = QProgressBar(self.loading_screen)
+        self.progress_bar = QProgressBar(self)
         self.progress_bar.setGeometry(60, 180, 300, 32)
         self.progress_bar.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.progress_bar.setFont(QFont('Segoe Print', 10, QFont.Weight.Bold))
 
-
-    def close(self):
-        self.timer.stop()
-        self.close()
-
-
-def loading():
-    if LoadingScreen.progress < 100:
-        LoadingScreen.progress += 1
-        LoadingScreen.progress_bar.setValue(LoadingScreen.progress)
-        print('a')
-    else:
-        LoadingScreen.timer.stop()
-        # LoadingScreen.close()
+        # ? Set progress bar style
+        self.progress_bar.setStyleSheet('QProgressBar {border: 1px solid #FFD700; border-radius: 10px; text-align: center;} QProgressBar::chunk {background-color: #FFD700;}')
 
 
 
-# now test it
+    def loading(self):
+        if self.progress < 100:
+            self.progress += 1
+            self.progress_bar.setValue(self.progress)
+        else:
+            self.close()
+
+
 if __name__ == '__main__':
     import sys
     from PyQt6.QtWidgets import QApplication
@@ -94,3 +98,4 @@ if __name__ == '__main__':
     window = LoadingScreen()
     window.show()
     sys.exit(app.exec())
+

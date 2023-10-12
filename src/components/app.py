@@ -44,8 +44,9 @@ class App(QMainWindow):
         self.setMouseTracking(True)  # track mouse even when not clicking
         # self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)  # focus on the window
 
-        # # set a stylesheet
-        self._load_stylesheet()
+        # # set a stylesheet for the app
+        self._set_theme('default')
+        # self._set_theme('dev')
 
         self.menu_bar = MenuBar()
         self.setMenuBar(self.menu_bar)
@@ -54,15 +55,15 @@ class App(QMainWindow):
         self.setCentralWidget(self.display)
 
         # connect the mnenu bar to the workspace
-        self.menu_bar.select_image.triggered.connect(self.display.workspace.image_buffer.import_image)
-        self.menu_bar.save_image.triggered.connect(self.display.workspace.image_buffer.save_image)
+        # self.menu_bar.select_image.triggered.connect(self.display.workspace.image_buffer.import_image)
+        # self.menu_bar.save_image.triggered.connect(self.display.workspace.image_buffer.save_image)
 
 
-    def _load_stylesheet(self):
+    def _set_theme(self, theme: str = 'default') -> None:
         """
         Load the stylesheet from the sass file
         """
-        with open("resources\\stylesheet.scss", 'r') as file:
+        with open(f"{Assets.THEMES.value}{theme}.scss", 'r') as file:
             self.setStyleSheet(compile(string=file.read()))
 
 

@@ -1,0 +1,205 @@
+// * Default Theme
+
+// * Base Colors
+$dark_base:          #2c3531;
+$dark_base_contr:    #69716e;
+$dark_base_faded:    #656c6a;
+$dark_accent:        #116466;
+$dark_accent_contr:  #3f8f92;
+$light_base:         #d9b08c;
+$light_base_contr:   #a48160;
+$light_accent:       #ffcb9a;
+$light_accent_contr: #c09467;
+$light_hard:         #06B5B5;
+$light_hard_contr:   #98aba7;
+
+
+// * General
+.app_window, 
+.menu_bar, 
+.menu_bar_submenu, 
+.sidebar_button, 
+.operation_button, 
+.import_button, 
+.operations_page_title 
+{
+    font-family: 'Consolas',  monospace;
+}
+
+
+// * Loading Screen
+// self.progress_bar.setStyleSheet('QProgressBar {border: 1px solid #FFD700; border-radius: 10px; text-align: center;} QProgressBar::chunk {background-color: #FFD700;}')
+.loading_screen {
+    background-color: $dark_base;
+    border-radius: 32%;
+}
+
+
+
+
+
+// * App Window
+.app_window, 
+.menu_bar, 
+.menu_bar_submenu 
+{
+    background-color: $dark_base;
+    color: $light_accent;
+}
+
+
+// * Menu Bar
+.menu_bar,
+.menu_bar_submenu 
+{
+    border: 1px solid $light_accent_contr;
+    margin: 1px;
+}
+
+.menu_bar::item::selected, 
+.menu_bar_submenu::item::selected {
+    background-color: $dark_accent;
+    color: $light_base;
+}
+
+
+// * Display
+.display {
+    // ^ this is the main display widget
+    // ^ Is the parent of all the other visible widgets
+    // * temproal color just for knowing where the display is
+    background-color: $dark_base_contr;  
+}
+
+
+// * Workspace
+.workspace {
+    // background-color: $dark_accent;
+    border: 1px solid black;
+}
+
+
+// * Side Panel
+.side_panel {
+    background-color: $dark_accent;
+    border: 1px solid $light_accent_contr;
+    border-radius: 10%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+// .sidebar_button, .operation_button {
+//     font-weight: 600;
+//     background: $dark_accent;
+//     color: $light_accent;
+//     border: 1px solid $light_accent_contr;
+//     border-radius: 10%;
+// }
+// .sidebar_button:hover, .operation_button:hover {
+//     background-color: $light_hard;
+//     color: $dark_base;
+//     border: 3px solid $light_hard_contr;
+//     border-radius: 8%;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+// .sidebar {
+// }
+// .sidebar_buttons_frame {
+// }
+// .operations_menu {
+// }
+// .operations_page {
+// }
+// .operations_page_title {
+//     color: $light_accent;
+// }
+
+// .workspace {
+//     background-color: $dark_accent;
+// }
+// .workspace_frame {
+//     background-color: $dark_base;
+// }
+// .visualizer {
+//     background-color: $dark_accent;
+// }
+
+
+
+
+
+
+
+
+
+
+
+// .image_buffer, .import_button {
+//     background-color: $dark_base_contr;
+//     border: 1px solid $light_accent_contr;
+//     border-radius: 10%;
+// }
+// .image_buffer:hover, .import_button:hover {
+//     background-color: $dark_base_faded;
+//     border : 1px solid $light_base_contr;
+// }
+
+// .import_button {
+//     border: none;
+// }
+// .import_button:hover {
+// }
+
+
+// QSpinBox, QComboBox {
+//     font-family: 'Consolas',  monospace;
+//     background-color: $dark_base;
+//     color: $light_accent;
+// }
+
+
+
+
+// QProgressBar {
+//     border: 2px solid DarkTurquoise;
+//     border-radius: 10%;
+//     text-align: center;
+//     color: white;
+// }
+// QProgressBar::chunk {
+//     border-radius: 8%;
+//     background-color: white;
+// }
+// 
+/* LOADING SCREEN
+background-color: qlineargradient(spread:pad, x1:0.006, y1:0.256, x2:0.976955, y2:0.755, stop:0 rgba(149, 0, 102, 255), stop:0.284091 rgba(137, 2, 191, 255), stop:0.528409 rgba(85, 92, 212, 255), stop:0.960227 rgba(255, 255, 255, 255));
+border-radius: 32%;
+
+ICON LABEL
+icon_label.setStyleSheet('QLabel {background-color: transparent;}')
+
+TITLE BAR
+self.title_bar.setStyleSheet('''QLabel {color: white;}''')
+*/
