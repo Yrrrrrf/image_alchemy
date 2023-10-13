@@ -12,6 +12,7 @@ class SidePanel(QFrame):  # QWidget, but temporary is a QFrame just for testing
     Side Bar contains the tools and the settings of the application.
     '''
     margin: int = 8  # margin between the buttons
+    is_expanded: bool = False  # Flag to track the toggle state
 
 
     def __init__(self):
@@ -25,24 +26,20 @@ class SidePanel(QFrame):  # QWidget, but temporary is a QFrame just for testing
         self.setFixedWidth(self.margin*4)  # set the initial size of the side bar
         # self.setFixedWidth(self.margin*4+SideBarButton.size)  # set the initial size of the side bar
 
-        self.clicked = False  # Flag to track the toggle state
+
+        # self.is_expanded = False  # * this is a redundant line (it's already set in the dataclass)
 
 
     def mousePressEvent(self, event):
+        '''
+        When the mouse is pressed, the side bar will expand or collapse.
+        '''
         if event.button() == Qt.MouseButton.LeftButton:
-            match self.clicked:
-                case True: self.setFixedWidth(200)
-                case False: self.setFixedWidth(50)
-            self.clicked = not self.clicked  
-
-
-
-
-
-
-
-
-
+            match self.is_expanded:
+                # Toggle the side bar
+                case True: self.setFixedWidth(self.margin*4)
+                case False: self.setFixedWidth(200)
+            self.is_expanded = not self.is_expanded  
 
 
 # @dataclass

@@ -85,7 +85,6 @@ class LoadingScreen(QFrame):
         self.progress_bar.setStyleSheet('QProgressBar {border: 1px solid #FFD700; border-radius: 10px; text-align: center;} QProgressBar::chunk {background-color: #FFD700;}')
 
 
-
     def loading(self):
         if self.progress < 100:
             self.progress += 1
@@ -99,4 +98,4 @@ def run():
     app = QApplication(sys.argv)
     window = LoadingScreen()
     window.show()
-    sys.exit(app.exec())
+    app.exec()

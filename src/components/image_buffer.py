@@ -41,7 +41,7 @@ class ImageBuffer(QLabel):
         # self.setStyleSheet(style+hover_style)  # set the style of the image buffer
 
         # & YESNT
-        # self.update_image()  # * Make the default image appear (Lenna)
+        self.update_image()  # * Make the default image appear (Lenna)
 
 
     # * CREATE

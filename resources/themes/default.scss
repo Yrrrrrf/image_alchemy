@@ -15,15 +15,15 @@ $light_hard:         #06B5B5;
 $light_hard_contr:   #98aba7;
 
 
-// * General
+// // * General
 .app_window, 
 .menu_bar, 
 .menu_bar_submenu, 
 .sidebar_button, 
 .operation_button, 
 .import_button, 
-.operations_page_title 
-.tab_layout
+.operations_page_title,
+QTabBar::tab
 {
     font-family: 'Consolas',  monospace;
     font-size: 12px;
@@ -31,7 +31,7 @@ $light_hard_contr:   #98aba7;
 
 
 // * App Window
-.app_window, 
+.app_window,
 .menu_bar, 
 .menu_bar_submenu
 {
@@ -65,10 +65,41 @@ $light_hard_contr:   #98aba7;
 
 
 // * Workspace
-.workspace {
-    border: 1px solid $light_accent_contr;
-    background-color: $dark_base;
-    border-radius: 10%;
+// .workspace {
+//     border: 1px solid $light_accent_contr;
+//     background-color: $dark_base;
+//     border-radius: 10%;
+//     // add an internal margin
+//     margin: 10px;
+// }
+
+
+
+.workspace_tabs {
+    QTabBar::tab {
+        background-color: $dark_base_contr;
+        border: 1px solid $light_accent_contr;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        padding: 5px;
+        color: white;
+    }    
+    QTabBar::tab::selected {
+        background-color: $light_accent_contr;
+    }
+    QTabBar::tab::hover {
+        background-color: $light_accent;
+    }
+    QTabBar::close-button {
+        // stylelint-disable
+        image: url('resources/img/static/trash.png');
+    }
+    // QTabWidget::pane {
+    //     border: 1px solid $light_accent_contr;
+    //     background-color: $dark_base_contr;
+    //     // border-radius: 10px;
+    //     padding: 0px;
+    // }
 }
 
 
@@ -78,7 +109,6 @@ $light_hard_contr:   #98aba7;
     border: 1px solid $light_accent_contr;
     border-radius: 10%;
 }
-
 
 // * Side Panel Buttons
 // .sidebar_button, .operation_button {
@@ -102,41 +132,6 @@ $light_hard_contr:   #98aba7;
     border: 1px solid $light_accent_contr;
     border-radius: 10%;
 }
-
-
-// todo: FIX THIS
-// * Check why yhr .tab_layout class is not working
-// * The style sheet is not being applied to the tab widget (when it's called as .tab_layout)
-.tab_layout::tab {
-// QTabBar::tab {
-    background-color: $dark_base_contr;
-    border: 1px solid $light_accent_contr;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    padding: 5px;
-}
-QTabBar::tab::selected {
-    background-color: $light_accent_contr;
-}
-QTabBar::tab::hover {
-    background-color: $dark_accent_contr;
-}
-// * fix this
-// .tab_layout:tab:selected {background-color: $light_accent_contr;}
-// .tab_layout:tab:hover {background-color: $dark_accent_contr;}
-// }
-
-// This is the tab widget itself (the pane)
-QTabWidget::pane {
-    border: 1px solid $light_accent_contr;
-    background-color: $dark_base_contr;
-    // border-radius: 10px;
-    padding: 0px;
-}
-
-
-
-
 
 
 
@@ -170,7 +165,6 @@ QTabWidget::pane {
 // }
 
 
-// TODO: FIX THE Loading Screen STYLE SHEET
 .loading_bar {
     // border: 1px solid $light_accent_contr;
     border: 1px solid #FFD700;

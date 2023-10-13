@@ -32,7 +32,7 @@ class Visualizer(QLabel):
         # self.margin = margin
         # self.template = template
 
-        self.setMinimumSize(QSize(720, 640))
+        # self.setMinimumSize(QSize(720, 640))
 
         
 
