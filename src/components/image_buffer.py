@@ -18,11 +18,10 @@ class ImageBuffer(QLabel):
     Image buffer class reference to the image buffer of the application.
     '''
     pix_data_map: QPixmap  # the image data
-    # * this both below are just temporary vars
     img: np.ndarray  # the image
-    cost_matrix: np.ndarray  # the cost matrix
+    # cost_matrix: np.ndarray  # the cost matrix
 
-    img_path: str = Assets.TEST_IMAGES.value+'Lenna.png'  # the path of the image buffer
+    img_path: str = Assets.TEST_IMAGES.value+'lenna.png'  # the path of the image buffer
 
 
     def __init__(self, parent: QWidget, width: int = 512, height: int = 512):
@@ -37,12 +36,12 @@ class ImageBuffer(QLabel):
         super().__init__(parent)
         self.setCursor(Qt.CursorShape.CrossCursor)
         self.setFixedSize(width, height)
-        style = 'QLabel {background-color: lightgray; border-radius: 10%;}'
-        hover_style = "QLabel:hover{background-color : lightgray; border : 1px solid gray;}"
-        self.setStyleSheet(style+hover_style)  # set the style of the image buffer
+        # style = 'QLabel {background-color: lightgray; border-radius: 10%;}'
+        # hover_style = "QLabel:hover{background-color : lightgray; border : 1px solid gray;}"
+        # self.setStyleSheet(style+hover_style)  # set the style of the image buffer
 
         # & YESNT
-        self.update_image()  # * Make the default image appear (Lenna)
+        # self.update_image()  # * Make the default image appear (Lenna)
 
 
     # * CREATE

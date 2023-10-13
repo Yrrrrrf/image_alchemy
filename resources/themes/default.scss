@@ -1,5 +1,6 @@
 // * Default Theme
 
+
 // * Base Colors
 $dark_base:          #2c3531;
 $dark_base_contr:    #69716e;
@@ -22,6 +23,7 @@ $light_hard_contr:   #98aba7;
 .operation_button, 
 .import_button, 
 .operations_page_title 
+.tab_layout
 {
     font-family: 'Consolas',  monospace;
     font-size: 12px;
@@ -31,7 +33,7 @@ $light_hard_contr:   #98aba7;
 // * App Window
 .app_window, 
 .menu_bar, 
-.menu_bar_submenu 
+.menu_bar_submenu
 {
     background-color: $dark_base;
     color: $light_accent;
@@ -40,7 +42,7 @@ $light_hard_contr:   #98aba7;
 
 // * Menu Bar
 .menu_bar,
-.menu_bar_submenu 
+.menu_bar_submenu
 {
     border: 1px solid $light_accent_contr;
     margin: 1px;
@@ -57,14 +59,16 @@ $light_hard_contr:   #98aba7;
 .display {
     // ^ this is the main display widget
     // ^ Is the parent of all the other visible widgets
-    // * temproal color just for knowing where the display is
+    // * temporal color just for knowing where the display is
     background-color: $dark_base_contr;  
 }
 
 
 // * Workspace
 .workspace {
-    border: 1px solid black;
+    border: 1px solid $light_accent_contr;
+    background-color: $dark_base;
+    border-radius: 10%;
 }
 
 
@@ -92,6 +96,55 @@ $light_hard_contr:   #98aba7;
 // }
 
 
+// * Visualizer
+.visualizer {
+    background-color: $dark_base_contr;
+    border: 1px solid $light_accent_contr;
+    border-radius: 10%;
+}
+
+
+// todo: FIX THIS
+// * Check why yhr .tab_layout class is not working
+// * The style sheet is not being applied to the tab widget (when it's called as .tab_layout)
+.tab_layout::tab {
+// QTabBar::tab {
+    background-color: $dark_base_contr;
+    border: 1px solid $light_accent_contr;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 5px;
+}
+QTabBar::tab::selected {
+    background-color: $light_accent_contr;
+}
+QTabBar::tab::hover {
+    background-color: $dark_accent_contr;
+}
+// * fix this
+// .tab_layout:tab:selected {background-color: $light_accent_contr;}
+// .tab_layout:tab:hover {background-color: $dark_accent_contr;}
+// }
+
+// This is the tab widget itself (the pane)
+QTabWidget::pane {
+    border: 1px solid $light_accent_contr;
+    background-color: $dark_base_contr;
+    // border-radius: 10px;
+    padding: 0px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // .image_buffer, .import_button {
@@ -110,7 +163,6 @@ $light_hard_contr:   #98aba7;
 // .import_button:hover {
 // }
 
-
 // QSpinBox, QComboBox {
 //     font-family: 'Consolas',  monospace;
 //     background-color: $dark_base;
@@ -118,14 +170,7 @@ $light_hard_contr:   #98aba7;
 // }
 
 
-
 // TODO: FIX THE Loading Screen STYLE SHEET
-// .loading_screen {
-    //     background-color: $dark_base;
-    //     border-radius: 32%;
-    // }
-// self.progress_bar.setStyleSheet('QProgressBar {border: 1px solid #FFD700; border-radius: 10px; text-align: center;} QProgressBar::chunk {background-color: #FFD700;}')
-// Use the style above for the loading bar
 .loading_bar {
     // border: 1px solid $light_accent_contr;
     border: 1px solid #FFD700;

@@ -1,27 +1,16 @@
-"""
-This file defines the main App class.
-
-
-"""
-
-#? Imports ------------------------------------------------------------------------------------
-
-# Built-in imports
+# standard imports
 from dataclasses import dataclass  # dataclass decorator
 
 # Third-party imports
+from sass import compile  # compile the sass stylesheet
 from PyQt6.QtWidgets import QMainWindow
 from PyQt6.QtGui import QIcon
-from PyQt6.QtCore import Qt
 
 # Own imports
 from config.globals import *
 from components.display import Display
 from components.menu_bar import MenuBar
-from sass import compile
 
-
-#? Logic --------------------------------------------------------------------------------------
 
 @dataclass
 class App(QMainWindow):
@@ -29,7 +18,9 @@ class App(QMainWindow):
     App class
     This class contains the logic for the GUI
     """
-    # display: Display
+    menu_bar: MenuBar
+    display: Display
+
 
     def __init__(self):
         """
@@ -44,7 +35,7 @@ class App(QMainWindow):
         self.setMouseTracking(True)  # track mouse even when not clicking
         # self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)  # focus on the window
 
-        # # set a stylesheet for the app
+        # * Set a stylesheet for the app
         self._set_theme('default')
         # self._set_theme('dev')
 
@@ -59,9 +50,17 @@ class App(QMainWindow):
         # self.menu_bar.save_image.triggered.connect(self.display.workspace.image_buffer.save_image)
 
 
-    def _set_theme(self, theme: str = 'default') -> None:
+    def _set_theme(self, theme: str = 'default'):
         """
         Load the stylesheet from the sass file
+
+        # Arguments
+            theme (str): the name of the theme to load
+
+        # Theme names
+            - `default`: the default theme
+            - `dark`: the dark theme (not implemented yet)
+            - `dev`: the development theme (not implemented yet)
         """
         with open(f"{Assets.THEMES.value}{theme}.scss", 'r') as file:
             self.setStyleSheet(compile(string=file.read()))
