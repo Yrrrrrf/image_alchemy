@@ -1,17 +1,15 @@
+# standard imports
 import sys
 
-import cv2 as cv
+# third-party imports
 from PyQt6.QtWidgets import QMenuBar, QMenu
-from PyQt6.QtGui import QAction, QFont
+from PyQt6.QtGui import QAction
 
+# own imports
 from config.globals import Config
 from components.workspace import Workspace
 
 
-APP_COLOR = '#00ff00'
-
-
-# @dataclass
 class MenuBar(QMenuBar):
     '''
     The MenuBar class represents the menu bar of the application.
@@ -54,6 +52,8 @@ class MenuBar(QMenuBar):
             self.addMenu(menu)
 
 
+# ^ Here is defined the menu bar of the application.
+# ^ It contains the menus and options of the application.
 menu_bar_dict = {
     'File': [
         {
@@ -102,9 +102,24 @@ menu_bar_dict = {
             'name': 'Separator'
         },
         {
+            # todo: Create an emergent window to change the theme to the default ones or to a custom one
+            # todo: Create at least 3 themes: default, dark, dev
             'name': 'Change Theme',
             'shortcut': 'Ctrl+T',
             'function': lambda: print('Still working on it...!')
+        }
+    ],
+
+    'Edit': [
+        {
+            'name': 'Undo',
+            'shortcut': 'Ctrl+Z',
+            'function': lambda: print('Undo function')
+        },
+        {
+            'name': 'Redo',
+            'shortcut': 'Ctrl+Y',
+            'function': lambda: print('ReDo function')
         }
     ],
 
@@ -115,7 +130,12 @@ menu_bar_dict = {
             'function': lambda: {
                 print(f'[{Config.NAME.value}]\t\033[94m{Config.VERSION.value}\033[0m by \033[92m{Config.AUTHOR.value}\033[0m', end='\t'),
                 print(f'https://github.com/Yrrrrrf/image_alchemy')  # Repo link
-                }
+            }
+        },
+        {
+            'name': 'Shortcut Keys',
+            'shortcut': 'Ctrl+Shift+H',
+            'function': lambda: print('\033[94mShortcut keys function\033[0m is still under development...!')
         }
     ]
 }

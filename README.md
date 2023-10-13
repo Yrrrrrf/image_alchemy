@@ -8,7 +8,7 @@ Also **keep your entire editing journey** neatly documented in an automatic edit
 
 ## Considerations
 - For now, the project is on development, so the setup is not automated yet. And also it could have some bugs.
-- The python files marked with `ex_*.py` were used on an old project. They are not used on this project (instead), but they are still here for reference.
+- The python files marked with `ex_*.py` were used on an old project. They are not used on this project (**yet**), but they are still here for reference.
 
 
 
@@ -53,3 +53,7 @@ This project is licensed under the [MIT License](./LICENSE).
 But it also uses [PyQt6](https://www.riverbankcomputing.com/software/pyqt/) and [OpenCV](https://opencv.org/) which have their own licenses.
 - [PyQt6 License](https://www.riverbankcomputing.com/static/Docs/PyQt6/introduction.html#license) (GPLv3 License)
 - [OpenCV License](https://opencv.org/license/) ([Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/))
+
+
+## Attributions
+This project uses some icons from [flaticon.com](https://www.flaticon.com/). The individual attributions are in the [attributions.md](./resources/img/static/attributions.md) file.

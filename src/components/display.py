@@ -3,8 +3,11 @@ from dataclasses import dataclass
 
 # third-party imports
 from PyQt6.QtWidgets import QWidget, QGridLayout, QFrame
+# from PyQt6.QtWidgets import QStackedLayout  
+# the QStackedLayout stacks the widgets on top of each other (like a deck of cards)
+from PyQt6.QtCore import Qt  # * for AlignmentFlag
 
-# local imports
+# own imports
 from components.workspace import Workspace
 from components.side_panel import SidePanel
 
@@ -19,21 +22,18 @@ class Display(QFrame):
     side_panel: QWidget    
     workspace: Workspace
 
+
     def __init__(self):
         super().__init__()
         self.setProperty('class', 'display')
 
-        layout = QGridLayout()
-        # ? This lines below will eventually be moved to its own class (SidePanel)
-        self.side_panel = SidePanel()  # create the side panel
-
-        # ? Set the workspace
+        self.side_panel = SidePanel()
         self.workspace = Workspace()
-        # set a white background
 
-        # ? Set the layout distribution
-        layout.addWidget(self.side_panel, 0, 0)  # 0, 0 = row, column
-        layout.addWidget(self.workspace, 0, 1)  # 0, 1 = row, column
+        layout = QGridLayout()  # ? Set the layout distribution
+        # layout.addWidget(self.side_panel, 0, 0, alignment=Qt.AlignmentFlag.AlignTop)
+        # layout.addWidget(self.workspace, 0, 1, alignment=Qt.AlignmentFlag.AlignTop)
+        layout.addWidget(self.side_panel, 0, 0)  # * Expand and fill the space
+        layout.addWidget(self.workspace, 0, 1)
+
         self.setLayout(layout)
-
-

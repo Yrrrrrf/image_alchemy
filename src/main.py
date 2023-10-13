@@ -26,6 +26,12 @@ def main() -> None:
 
     It is also responsible for setting up the logging system and configuring it.
     """
+    # Execute the loading screen
+    # todo: fix the loading screen (it closes the entire app instead of just the loading screen)
+    # from components.loading_screen import run as run_loading_screen
+    # run_loading_screen()
+
+
     app = QApplication(argv)  # Manage the GUI application's control flow and main settings.
     window = App()  # Create the instance of the MainWindow
     window.show()  # Show the window

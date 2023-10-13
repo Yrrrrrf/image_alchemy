@@ -1,8 +1,10 @@
-import time
+# standard imports
 from dataclasses import dataclass
+import sys
 
-from PyQt6.QtGui import QPen, QPainter, QImage, QCursor, QBrush, QColor, QFont, QIcon, QPixmap
-from PyQt6.QtWidgets import QWidget, QFrame, QProgressBar, QVBoxLayout, QLabel
+# third-party imports
+from PyQt6.QtWidgets import QApplication, QFrame, QProgressBar, QLabel
+from PyQt6.QtGui import QImage, QFont, QPixmap
 from PyQt6.QtCore import Qt, QTimer
 
 
@@ -74,6 +76,7 @@ class LoadingScreen(QFrame):
     def set_progress_bar(self):
         # ? Set progress bar
         self.progress_bar = QProgressBar(self)
+        self.progress_bar.setProperty('class', 'loading_bar')
         self.progress_bar.setGeometry(60, 180, 300, 32)
         self.progress_bar.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.progress_bar.setFont(QFont('Segoe Print', 10, QFont.Weight.Bold))
@@ -91,11 +94,9 @@ class LoadingScreen(QFrame):
             self.close()
 
 
-if __name__ == '__main__':
-    import sys
-    from PyQt6.QtWidgets import QApplication
+# if __name__ == '__main__':
+def run():
     app = QApplication(sys.argv)
     window = LoadingScreen()
     window.show()
     sys.exit(app.exec())
-

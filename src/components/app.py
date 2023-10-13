@@ -39,7 +39,7 @@ class App(QMainWindow):
         self.setProperty('class', 'app_window')  # set the class name for the stylesheet
 
         self.setWindowTitle(Config.NAME.value)
-        self.setWindowIcon(QIcon(f"{Assets.ICONS.value}scissors.png"))
+        self.setWindowIcon(QIcon(f"{Assets.ICONS.value}philosophers-stone.png"))
         self.setMinimumSize(Config.WIDTH.value, Config.HEIGHT.value)
         self.setMouseTracking(True)  # track mouse even when not clicking
         # self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)  # focus on the window
@@ -65,12 +65,3 @@ class App(QMainWindow):
         """
         with open(f"{Assets.THEMES.value}{theme}.scss", 'r') as file:
             self.setStyleSheet(compile(string=file.read()))
-
-
-    def keyPressEvent(self, event):
-        """
-        Handle key press events
-        """
-        if event.key() == Qt.Key.Key_Escape:
-            self.close()
-
