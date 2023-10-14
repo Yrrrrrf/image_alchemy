@@ -1,12 +1,16 @@
-# from src.img_operations.load_image import load_cat
-# from src.templates import templates
-
-# from src.components.image_buffer import ImageBuffer
-from PyQt6.QtWidgets import QWidget, QFrame, QLabel, QVBoxLayout, QHBoxLayout, QPushButton
-from PyQt6.QtCore import Qt, QRect, QSize
-from PyQt6.QtGui import QImage, QPen, QPainter, QCursor, QShortcut
+# standard imports
 from dataclasses import dataclass
+
+# third-party imports
+from PyQt6.QtWidgets import QFrame, QLabel, QGridLayout
+from PyQt6.QtCore import Qt, QRect, QSize, QPoint, QEvent
+from PyQt6.QtGui import QCursor, QPixmap, QImage, QPainter
 import cv2 as cv
+
+# local imports
+from components.image_buffer import ImageBuffer
+from config.globals import Assets
+from templates import templates
 
 
 @dataclass
@@ -15,36 +19,40 @@ class Visualizer(QLabel):
     This class contains one or more image buffer's, which are the images that are displayed in the workspace.
     The visualizer is the container of the image buffer's. 
     '''
-    # images: list[ImageBuffer]  # list of image buffers
-    # margin: int = 16
-    # scale: float = 1.0
-    # template: str = 'square'
-    # selected: bool = False
-
+    images: list[ImageBuffer]
+    pix_data_map: QPixmap  # the image data
+    margin: int = 16
+    scale: float = 1.0
+    template: str = 'square'
+    selected: bool = False
 
     # def __init__(self, workspace: QFrame, width: int = 512, height: int = 512, scale: float = 1.0, margin: int = 16, template: str = 'square'):
-    def __init__(self, workspace: QFrame, template: str = 'square'):
+    def __init__(self, workspace: QFrame, template: str = '1x1'):
         super().__init__(workspace)
         self.setProperty('class', 'visualizer')
-
         self.setCursor(QCursor(Qt.CursorShape.CrossCursor))
+
+        self.setMinimumSize(QSize(512, 512))
+
         # self.scale = scale
         # self.margin = margin
         # self.template = template
+        self.set_template(template)  # also set a default ImageBuffer
 
-        # self.setMinimumSize(QSize(720, 640))
 
+        # todo: deceive if visualize or image buffer should be the one that saves the image
+        # i think it should be the image buffer fo individuality
+
+        # but probably the visualizer should have its own save method to store images that are composed of multiple image buffers
+        # that method should probably be called from the workspace???
         
+        # self.update_image()
 
 
-
-        # self.images = []
-        # template = list(templates.keys())[self.template]  # get the n template (name: str)
-        # for coors in templates[template](self.width(), self.height(), self.margin):
-        #     self.images.append(ImageBuffer(coors[2], coors[3], self))
-        #     self.images[-1].move(coors[0], coors[1])
+        self.save_image()
 
         # self.set_delete_menu()
+
 
     # def mousePressEvent(self, event):
     #     '''
@@ -72,36 +80,18 @@ class Visualizer(QLabel):
         #     self.move(self.pos(), self.selected.y() + 1)
 
 
-    # SELECT IMAGE BUFFER
-    # def select_image_buffer(self, image_buffer: ImageBuffer):
-    #     '''
-    #     Select an image buffer.
-    #     '''
-    #     self.selected = True
-    #     # image_buffer.selected = True
-    #     image_buffer.setStyleSheet('background-color: #e0e0e0')
-
-
-    # def deselect_image_buffer(self, image_buffer: ImageBuffer):
-    #     '''
-    #     Deselect an image buffer.
-    #     '''
-    #     self.selected = False
-    #     # image_buffer.selected = False
-    #     image_buffer.setStyleSheet('background-color: white')
-
-
-    def set_template(self):
+    def set_template(self, template: str):
         '''
         Set the template of the visualizer.
         The template is the layout of the image buffer's.
         '''
-        # self.images = []
-        # # template = list(templates.keys())[]  # get the n template (name: str)
-        # for coors in templates[template](self.width(), self.height(), self.margin):
-        #     self.images.append(ImageBuffer(coors[2], coors[3], self))
-        #     self.images[-1].move(coors[0], coors[1])
-        pass
+        self.images = []
+        for coors in templates[template](self.width(), self.height(), self.margin):
+            self.images.append(ImageBuffer(self, coors[2], coors[3]))
+            self.images[-1].move(coors[0], coors[1])
+            # * Set the new size of the visualizer
+            self.setFixedSize(QSize(coors[0] + coors[2] + 3* self.margin, coors[1] + coors[3] + 3 * self.margin))
+
 
     # def set_delete_menu(self):
     #     '''
@@ -119,17 +109,77 @@ class Visualizer(QLabel):
     #     # self.delete_button.hide()
 
 
-    def save_image(self, path: str = 'resources\\test.png'):
+    # * CREATE
+    def save_image(self):
         '''
-        Generate an equivalent constant image of the visualizer, but with the images of the image buffer's.
-        This image can be saved to a file.
-        The image will be reconstructed from the image buffer's.
+        Save the image buffer to the file system.
+        If the image is not valid, it will show an error message.
+
+        The image is stored on the `TEMP_IMAGES` directory.
+        
+        ## Arguments:
+            - img_path: `str`: the path of the image
         '''
-        # create a new image using OpenCV and map the image buffer's to the new image
-        image = cv.imread('resources\\test.png')
-        # for image_buffer in self.images:
-            # if image_buffer.image is not None:
-            # image[image_buffer.y():image_buffer.y()+image_buffer.height(), image_buffer.x():image_buffer.x()+image_buffer.width()] = image_buffer.image
-        # save the image to a file
-        # image.save(path)
-        # return the image
+        store_path = Assets.TEMP_IMAGES.value + 'stored_image.png'
+        match self.images[0].pix_data_map.save(store_path):
+            case True:  # if the image is valid, show the image info
+                print(f"\033[32mSuccessfully\x1B[37m stored at: \033[34m{store_path}\x1B[37m")
+            case False:  # if the image is not valid, show an error message
+                print(f"\033[31mError storing img\x1B[37m")
+
+
+    # * UPDATE
+    def update_image(self) -> None:
+        '''
+        Set the image buffer to a specific image.
+        
+        ## Arguments:
+            - img_path: `str`: the path of the image
+        '''
+        pass
+        # height, width, _ = cv.imread(self.img_path).shape  # get the image info
+        # self.setFixedSize(width, height)  # update the size of the image buffer
+
+        # # Print the image info
+        # print(f"Selected: \033[32m{self.img_path}\x1B[37m")
+        # print(f"     Shape: ({height}, {width}) = {height*width} pixels")
+
+        # self.pix_data_map = QPixmap(self.img_path)  # Create a QPixmap object (contains image data)
+        # self.img = cv.imread(self.img_path)  # Create a np.ndarray object (contains image data)
+        # self.cost_matrix = get_cost_matrix(self.img)  # Create a np.ndarray object (contains cost matrix data)
+        # # self.draw_shapes(self.pix_data_map)  # ^ draw shapes on the image
+
+        # self.setPixmap(self.pix_data_map)  # set the image buffer to the selected image
+
+
+    def mousePressEvent(self, event):
+        '''
+        Print the pixel data of the image
+        '''
+        match event.buttons():
+            case _:
+                self.print_px_data(event)
+
+
+    # ^ SOME EXTRA FEATURES ---------------------------------------------
+
+    def print_px_data(self, event):
+        '''
+        Print the pixel data of the image at the given event position.
+        Only if the click is inside the image.
+
+        ## Args:
+            - event (`QMouseEvent`): The mouse event that triggered the function.
+
+        Prints the pixel data of the image at the given event position to the console.
+        The pixel data is printed in the format (x, y)px = (r, g, b, a), where
+        (x, y) is the position of the pixel, (r, g, b, a) are the red, green, blue,
+        and alpha values of the pixel, respectively. The color values are printed
+        in RGB format, with each value ranging from 0 to 255.
+        '''
+        x, y = event.pos().x(), event.pos().y()
+        # if x < self.width() and y < self.height():
+        r, g, b, a = self.images[0].pixmap().toImage().pixelColor(event.pos()).getRgb()
+        print(f"\033[38;2;{r};{g};{b}m({x:4}, {y:4})\033[0mpx = ", end="")
+        print(f"\033[38;2;255;0;0m{r:3}\033[0m, \033[38;2;0;255;0m{g:3}\033[0m, \033[38;2;0;0;255m{b:3}\033[0m"
+            , f", \033[38;2;0;0;0m{a:3}\033[0m" if a != 255 else "")

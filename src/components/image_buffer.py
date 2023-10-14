@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 
 # third-party imports
-from PyQt6.QtWidgets import QLabel, QMessageBox, QWidget, QFileDialog
+from PyQt6.QtWidgets import QLabel, QMessageBox, QWidget, QFileDialog, QFrame
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import Qt
 import numpy as np
@@ -19,8 +19,6 @@ class ImageBuffer(QLabel):
     '''
     pix_data_map: QPixmap  # the image data
     img: np.ndarray  # the image
-    # cost_matrix: np.ndarray  # the cost matrix
-
     img_path: str = Assets.TEST_IMAGES.value+'lenna.png'  # the path of the image buffer
 
 
@@ -33,12 +31,10 @@ class ImageBuffer(QLabel):
             - width: `int`: the width of the image buffer
             - height: `int`: the height of the image buffer
         '''
-        super().__init__(parent)
+        super().__init__(parent)  # initialize the parent class
         self.setCursor(Qt.CursorShape.CrossCursor)
         self.setFixedSize(width, height)
-        # style = 'QLabel {background-color: lightgray; border-radius: 10%;}'
-        # hover_style = "QLabel:hover{background-color : lightgray; border : 1px solid gray;}"
-        # self.setStyleSheet(style+hover_style)  # set the style of the image buffer
+        self.setProperty('class', 'image_buffer')
 
         # & YESNT
         self.update_image()  # * Make the default image appear (Lenna)
@@ -112,26 +108,3 @@ class ImageBuffer(QLabel):
         # self.draw_shapes(self.pix_data_map)  # ^ draw shapes on the image
 
         self.setPixmap(self.pix_data_map)  # set the image buffer to the selected image
-
-
-    # ^ SOME EXTRA FEATURES ---------------------------------------------
-    def print_px_data(self, event):
-        '''
-        Print the pixel data of the image at the given event position.
-        Only if the click is inside the image.
-
-        ## Args:
-            - event (`QMouseEvent`): The mouse event that triggered the function.
-
-        Prints the pixel data of the image at the given event position to the console.
-        The pixel data is printed in the format (x, y)px = (r, g, b, a), where
-        (x, y) is the position of the pixel, (r, g, b, a) are the red, green, blue,
-        and alpha values of the pixel, respectively. The color values are printed
-        in RGB format, with each value ranging from 0 to 255.
-        '''
-        x, y = event.pos().x(), event.pos().y()
-        if x < self.width() and y < self.height():
-            r, g, b, a = self.pixmap().toImage().pixelColor(event.pos()).getRgb()
-            print(f"\033[38;2;{r};{g};{b}m({x:4}, {y:4})\033[0mpx = ", end="")
-            print(f"\033[38;2;255;0;0m{r:3}\033[0m, \033[38;2;0;255;0m{g:3}\033[0m, \033[38;2;0;0;255m{b:3}\033[0m"
-                , f", \033[38;2;0;0;0m{a:3}\033[0m" if a != 255 else "")

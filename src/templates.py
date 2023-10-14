@@ -3,23 +3,6 @@
     The templates are used to create the image buffers.
 '''
 
-def template_spec_parser(specs: str) -> list[list]:
-    # Outer variables; just for testing right now
-    width = 600
-    height = 600
-    margin = 10
-    # String parsing part
-    hdivs = 1
-    vdivs = 1
-
-    # Actual implementation
-    v_total_margin = (vdivs + 1) * margin
-    h_total_margin = (hdivs + 1) * margin
-    frac_heigth = int((height - h_total_margin) / hdivs)
-    frac_width = int((width - v_total_margin) / vdivs)
-
-# r(1), c(1)
-# r(1 1 1...), r(c(1 1 1...))
 
 templates = {
     # w -> width,   h -> height,   m -> margin
@@ -82,5 +65,3 @@ templates = {
 # c(2r *1 *1)
 # c(r(*1 *1 *2) r(*1 *1 *2) r(1 *3 *3))
 
-if __name__ == '__main__':
-    pass

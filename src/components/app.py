@@ -64,3 +64,6 @@ class App(QMainWindow):
         """
         with open(f"{Assets.THEMES.value}{theme}.scss", 'r') as file:
             self.setStyleSheet(compile(string=file.read()))
+
+
+    

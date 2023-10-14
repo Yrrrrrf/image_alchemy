@@ -23,7 +23,7 @@ $light_hard_contr:   #98aba7;
 .operation_button, 
 .import_button, 
 .operations_page_title,
-QTabBar::tab
+.QTabBar::tab
 {
     font-family: 'Consolas',  monospace;
     font-size: 12px;
@@ -49,57 +49,74 @@ QTabBar::tab
 }
 
 .menu_bar::item::selected, 
-.menu_bar_submenu::item::selected {
+.menu_bar_submenu::item::selected 
+{
     background-color: $dark_accent;
-    color: $light_base;
+    color: white;
 }
 
 
 // * Display
-.display {
-    // ^ this is the main display widget
-    // ^ Is the parent of all the other visible widgets
-    // * temporal color just for knowing where the display is
-    background-color: $dark_base_contr;  
+.display
+{
+    background-color: $dark_base;
+    // border: 1px solid green;  // ^ temporal color just for knowing where the workspace is
 }
 
 
 // * Workspace
-// .workspace {
-//     border: 1px solid $light_accent_contr;
-//     background-color: $dark_base;
-//     border-radius: 10%;
-//     // add an internal margin
-//     margin: 10px;
-// }
-
-
-
-.workspace_tabs {
-    QTabBar::tab {
-        background-color: $dark_base_contr;
+.workspace {
+    border: 1px solid $light_accent_contr;
+    background-color: $dark_base;
+    border-radius: 10%;
+}
+// * Workspace Tabs
+.workspace_tabs
+{
+    .QTabBar::tab
+    {
+        background-color: $dark_base;
         border: 1px solid $light_accent_contr;
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
         padding: 5px;
-        color: white;
-    }    
-    QTabBar::tab::selected {
-        background-color: $light_accent_contr;
+        color: $light_accent;  // font color
     }
-    QTabBar::tab::hover {
+    .QTabBar::tab::hover
+    {
         background-color: $light_accent;
+        color: white
     }
-    QTabBar::close-button {
-        // stylelint-disable
-        image: url('resources/img/static/trash.png');
+
+    // Selected Tab
+    .QTabBar::tab::selected,
+    .QTabBar::tab::selected::hover 
+    {
+        background-color: $light_accent_contr;
+        border: 2px solid $light_base;
+        color: white;  // font color
     }
-    // QTabWidget::pane {
-    //     border: 1px solid $light_accent_contr;
-    //     background-color: $dark_base_contr;
-    //     // border-radius: 10px;
-    //     padding: 0px;
-    // }
+
+    // New Tab Button
+    .QPushButton {
+        background-color: $dark_base;
+        border: 2px solid $light_accent_contr;
+        border-top-left-radius: 4%;
+        border-top-right-radius: 4%;
+        padding: 5px;
+    }
+    .QPushButton:hover {background-color: white;}
+
+    // Close Button
+    .QTabBar::close-button {image: url('resources/img/static/trash.png');}
+    .QTabBar::close-button::hover {background-color: white;}
+}
+// todo: check why this doesn't work when it's inside the .workspace_tabs class
+QTabWidget::pane {  // this also belongs to the .workspace_tabs class but it doesn't work inside it
+    border: 1px solid $light_accent_contr;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding: 8px;  // Adds space between the tabs and the workspace
 }
 
 
@@ -129,34 +146,35 @@ QTabBar::tab
 // * Visualizer
 .visualizer {
     background-color: $dark_base_contr;
-    border: 1px solid $light_accent_contr;
-    border-radius: 10%;
+    // border: 1px solid $light_accent_contr;
+    // border-radius: 10%;
 }
 
 
-
-
-
-
-
-
-
-
-// .image_buffer, .import_button {
-//     background-color: $dark_base_contr;
-//     border: 1px solid $light_accent_contr;
-//     border-radius: 10%;
-// }
-// .image_buffer:hover, .import_button:hover {
-//     background-color: $dark_base_faded;
-//     border : 1px solid $light_base_contr;
-// }
-
+// * Image Buffer
+.image_buffer,
+.import_button
+{
+    background-color: white;
+    // background-color: $dark_base_contr;
+    border: 1px solid $light_accent_contr;
+    // border-radius: 10%;
+}
+.image_buffer:hover,
+.import_button:hover
+{
+    background-color: $dark_base_faded;
+    border : 1px solid $light_base_contr;
+}
 // .import_button {
 //     border: none;
 // }
 // .import_button:hover {
 // }
+
+
+
+
 
 // QSpinBox, QComboBox {
 //     font-family: 'Consolas',  monospace;
@@ -165,6 +183,7 @@ QTabBar::tab
 // }
 
 
+// * 
 .loading_bar {
     // border: 1px solid $light_accent_contr;
     border: 1px solid #FFD700;
