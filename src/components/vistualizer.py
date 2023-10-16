@@ -11,6 +11,7 @@ import cv2 as cv
 from components.image_buffer import ImageBuffer
 from config.globals import Assets
 from templates import templates
+# from templates import Templates
 
 
 @dataclass
@@ -20,78 +21,50 @@ class Visualizer(QLabel):
     The visualizer is the container of the image buffer's. 
     '''
     images: list[ImageBuffer]
-    pix_data_map: QPixmap  # the image data
-    margin: int = 16
-    scale: float = 1.0
-    template: str = 'square'
-    selected: bool = False
+    border: int = 0
+    # scale: float = 1.0
+    # template: str = 'square'
 
-    # def __init__(self, workspace: QFrame, width: int = 512, height: int = 512, scale: float = 1.0, margin: int = 16, template: str = 'square'):
-    def __init__(self, workspace: QFrame, template: str = '1x1'):
+    def __init__(self, workspace: QFrame, template: str = '1x1', border: int = 16):
+    # def __init__(self, workspace: QFrame):
         super().__init__(workspace)
         self.setProperty('class', 'visualizer')
         self.setCursor(QCursor(Qt.CursorShape.CrossCursor))
-
         self.setMinimumSize(QSize(512, 512))
 
-        # self.scale = scale
-        # self.margin = margin
-        # self.template = template
+        # * Color the background
+        self.bg_pixmap = QPixmap(self.width(), self.height())
+        self.bg_pixmap.fill(Qt.GlobalColor.white)
+
+        # self.border = border  # 16
+        # template = '1x1'
         self.set_template(template)  # also set a default ImageBuffer
+        self.draw_images()
 
 
-        # todo: deceive if visualize or image buffer should be the one that saves the image
-        # i think it should be the image buffer fo individuality
-
-        # but probably the visualizer should have its own save method to store images that are composed of multiple image buffers
-        # that method should probably be called from the workspace???
-        
-        # self.update_image()
-
-
-        self.save_image()
-
-        # self.set_delete_menu()
+    def draw_images(self):
+        '''
+        Draw the images on the visualizer.
+        '''
+        painter = QPainter(self.bg_pixmap)
+        for image in self.images:
+            painter.drawPixmap(image.x(), image.y(), image.pixmap())
+            self.setPixmap(self.bg_pixmap)
 
 
-    # def mousePressEvent(self, event):
-    #     '''
-    #     When the mouse is pressed, the image buffer will be selected.
-    #     '''
-    #     # SET ARROW KEY SHORTCUTS
-
-    #     self.shortcut = QShortcut(Qt.Key.Key_Left, self)
-    #     self.shortcut.activated.connect(lambda: print('x'))
-    #     self.shortcut = QShortcut(Qt.Key.Key_Right, self)
-    #     self.shortcut.activated.connect(lambda: print('x'))
-    #     self.shortcut = QShortcut(Qt.Key.Key_Up, self)
-    #     self.shortcut.activated.connect(lambda: print('x'))
-    #     self.shortcut = QShortcut(Qt.Key.Key_Down, self)
-    #     self.shortcut.activated.connect(lambda: print('x'))
-
-        # # def move functions
-        # def move_left():
-        #     self.move(self.pos() - 1, self.selected.y())
-        # def move_right():
-        #     self.move(self.pos() + 1, self.selected.y())
-        # def move_up():
-        #     self.move(self.pos(), self.selected.y() - 1)
-        # def move_down():
-        #     self.move(self.pos(), self.selected.y() + 1)
-
-
-    def set_template(self, template: str):
+    # def set_template(self, template: Templates) -> None:
+    def set_template(self, template: str) -> None:
         '''
         Set the template of the visualizer.
         The template is the layout of the image buffer's.
         '''
         self.images = []
-        for coors in templates[template](self.width(), self.height(), self.margin):
+        for coors in templates[template](self.width(), self.height(), self.border):
+            # print(coors)
             self.images.append(ImageBuffer(self, coors[2], coors[3]))
             self.images[-1].move(coors[0], coors[1])
             # * Set the new size of the visualizer
-            self.setFixedSize(QSize(coors[0] + coors[2] + 3* self.margin, coors[1] + coors[3] + 3 * self.margin))
-
+            self.setFixedSize(self.width(), self.height())
 
     # def set_delete_menu(self):
     #     '''
@@ -121,11 +94,12 @@ class Visualizer(QLabel):
             - img_path: `str`: the path of the image
         '''
         store_path = Assets.TEMP_IMAGES.value + 'stored_image.png'
-        match self.images[0].pix_data_map.save(store_path):
+        match self.pixmap().save("test.png"):
             case True:  # if the image is valid, show the image info
                 print(f"\033[32mSuccessfully\x1B[37m stored at: \033[34m{store_path}\x1B[37m")
             case False:  # if the image is not valid, show an error message
                 print(f"\033[31mError storing img\x1B[37m")
+                # print(self.pixmap())
 
 
     # * UPDATE
@@ -179,7 +153,7 @@ class Visualizer(QLabel):
         '''
         x, y = event.pos().x(), event.pos().y()
         # if x < self.width() and y < self.height():
-        r, g, b, a = self.images[0].pixmap().toImage().pixelColor(event.pos()).getRgb()
+        r, g, b, a = self.pixmap().toImage().pixelColor(event.pos()).getRgb()
         print(f"\033[38;2;{r};{g};{b}m({x:4}, {y:4})\033[0mpx = ", end="")
         print(f"\033[38;2;255;0;0m{r:3}\033[0m, \033[38;2;0;255;0m{g:3}\033[0m, \033[38;2;0;0;255m{b:3}\033[0m"
             , f", \033[38;2;0;0;0m{a:3}\033[0m" if a != 255 else "")

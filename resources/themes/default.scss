@@ -146,6 +146,10 @@ QTabWidget::pane {  // this also belongs to the .workspace_tabs class but it doe
 // * Visualizer
 .visualizer {
     background-color: $dark_base_contr;
+    // background-color: white;
+    // * This variable repesents the the color of the border
+    // * It's only visible when the visualizer is empty
+    // * Or if the "border" lenght is > 0
     // border: 1px solid $light_accent_contr;
     // border-radius: 10%;
 }
