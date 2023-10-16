@@ -7,13 +7,15 @@ Author: Yrrrrrf
 """
 
 
-# standard
+# standard imports
 from sys import exit, argv
 
-# external
+# third-party imports
 from PyQt6.QtWidgets import QApplication  # pip install PyQt6
+from PyQt6.QtCore import QTimer
 
-# internal
+# local imports
+from components.loading_screen import LoadingScreen
 from config.globals import Config  # import config
 from components.app import App  # import app
 
@@ -24,14 +26,22 @@ def main() -> None:
 
     It is also responsible for setting up the logging system and configuring it.
     """
-    # Execute the loading screen
-    # todo: fix the loading screen (it closes the entire app instead of just the loading screen)
-    # from components.loading_screen import run as run_loading_screen
-    # run_loading_screen()
-
     app = QApplication(argv)  # Manage the GUI application's control flow and main settings.
-    window = App()  # Create the instance of the MainWindow
-    window.show()  # Show the window
+    main_window = App()  # Create the instance of the MainWindow
+
+    # * for now the loading screen is just a visual effect so it really do nothing (yet)
+    # * Loading Screen must load resources, stylesheet & other stuff before the main window
+    # show_loading_screen = True
+    show_loading_screen = False
+    match show_loading_screen:
+        case True:
+            loading_screen = LoadingScreen()
+            loading_screen.show()
+            QTimer.singleShot(2000, loading_screen.close)  # Execute the main_window.show() function after 2 seconds
+            QTimer.singleShot(2000, main_window.show)  # Execute the main_window.show() function after 2 seconds
+        case False:
+            main_window.show()
+
     exit(app.exec())  # Execute the app
 
 

@@ -35,6 +35,7 @@ class TestImgOps(unittest.TestCase):
         assert histogram.resize_img_scale(img, 100) is not None
         assert histogram.resize_img(img, 100, 100) is not None
 
+
     def test_pixel(self):
         '''
         Test the pixel module.

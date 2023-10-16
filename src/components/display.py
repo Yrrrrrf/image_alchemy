@@ -22,8 +22,7 @@ class Display(QFrame):
     This class must the the main class of the application.
     '''
     side_panel: SidePanel  # * Maybe the Display can have more than one side panel along the window
-    # workspace_tabs: QTabWidget  # * Handles many Tabs
-    workspace_tabs: QWidget  # * Handles 1 Tab
+    workspace_tabs: QWidget  # * Handles 1 or many workspaces
 
 
     def __init__(self):
@@ -31,8 +30,8 @@ class Display(QFrame):
         self.setProperty('class', 'display')
 
         self.side_panel = SidePanel()
-        self.workspace_tabs = Workspace()  # * 1 workspace
-        # self.workspace_tabs = self._set_workspace_tabs()  # * multiple workspaces
+        # self.workspace_tabs = Workspace()  # * 1 workspace
+        self.workspace_tabs = self._set_workspace_tabs()  # * multiple workspaces
 
         layout = QGridLayout()  # ? Set the layout distribution
         layout.addWidget(self.side_panel, 0, 0)  # * Expand and fill the space

@@ -92,10 +92,3 @@ class LoadingScreen(QFrame):
         else:
             self.close()
 
-
-# if __name__ == '__main__':
-def run():
-    app = QApplication(sys.argv)
-    window = LoadingScreen()
-    window.show()
-    app.exec()

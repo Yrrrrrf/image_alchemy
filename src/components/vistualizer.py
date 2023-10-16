@@ -13,7 +13,8 @@ from config.globals import Assets
 from templates import templates
 # from templates import Templates
 
-
+# todo: Make the Visualizer scalable in size (also have to make the ImageBuffer scalable in size)
+# todo: think about the logic above
 @dataclass
 class Visualizer(QLabel):
     '''
@@ -22,8 +23,7 @@ class Visualizer(QLabel):
     '''
     images: list[ImageBuffer]
     border: int = 0
-    # scale: float = 1.0
-    # template: str = 'square'
+
 
     def __init__(self, workspace: QFrame, template: str = '1x1', border: int = 16):
     # def __init__(self, workspace: QFrame):
@@ -34,10 +34,12 @@ class Visualizer(QLabel):
 
         # * Color the background
         self.bg_pixmap = QPixmap(self.width(), self.height())
-        self.bg_pixmap.fill(Qt.GlobalColor.white)
+        # self.bg_pixmap.fill(Qt.GlobalColor.white)
 
-        # self.border = border  # 16
         # template = '1x1'
+        self.border = border  # 16
+        # todo: fix the border behavior for some templates
+
         self.set_template(template)  # also set a default ImageBuffer
         self.draw_images()
 
@@ -65,6 +67,7 @@ class Visualizer(QLabel):
             self.images[-1].move(coors[0], coors[1])
             # * Set the new size of the visualizer
             self.setFixedSize(self.width(), self.height())
+
 
     # def set_delete_menu(self):
     #     '''

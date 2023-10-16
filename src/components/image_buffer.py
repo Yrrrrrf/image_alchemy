@@ -41,11 +41,11 @@ class ImageBuffer(QLabel):
         self.setProperty('class', 'image_buffer')
 
         # pixmap = QPixmap(Assets.TEST_IMAGES.value+'lenna_gray.png')
-        pixmap = QPixmap(Assets.TEST_IMAGES.value+'lenna.png')
-        self.setPixmap(pixmap)
+        # pixmap = QPixmap(Assets.TEST_IMAGES.value+'lenna.png')
+        # self.setPixmap(pixmap)
 
         # make the ImageBuffer invisible
-        self.setVisible(False)
+        # self.setVisible(False)
 
         # & YESNT
         # self.update_image()  # * Make the default image appear (Lenna)
