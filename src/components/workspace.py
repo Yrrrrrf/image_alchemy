@@ -35,8 +35,6 @@ class Workspace(QScrollArea):
         self.setProperty('class', 'workspace')
         self.visualizer = Visualizer(self)
 
-
-
         # * See the scroll bars only when needed
 
         # self.setWidgetResizable(True)
@@ -70,6 +68,7 @@ class Workspace(QScrollArea):
         '''
         Set the buttons of the visualizer.
         '''
+        # todo: check why the buttons are setted to the last image buffer
         for img_buffer in self.visualizer.images:
             import_button = self.define_button('import')
             import_button.move(img_buffer.x() + (int)((img_buffer.width()-import_button.width())/2), img_buffer.y() + (int)((img_buffer.height()-import_button.height())/2))
@@ -82,26 +81,23 @@ class Workspace(QScrollArea):
             replace_button.move(img_buffer.x() + img_buffer.width() - 2 * delete_button.width() - 8, img_buffer.y() - delete_button.height() - 4)
             replace_button.hide()
 
-            import_button.clicked.connect(lambda: {
+            import_button.clicked.connect(lambda _, img_buffer=img_buffer: {
                 img_buffer.import_image(),
                 import_button.hide(),
                 delete_button.show(),
-                replace_button.show(), 
-                }
-            )
+                replace_button.show(),
+            })
 
-            delete_button.clicked.connect(lambda: {
-                print('delete'),
+            delete_button.clicked.connect(lambda _, img_buffer=img_buffer: {
+                img_buffer.remove_image(),
                 import_button.show(),
                 delete_button.hide(),
                 replace_button.hide(),
-                }
-            )
+            })
 
-            replace_button.clicked.connect(lambda: {
-                print('replace'),
-                }
-            )
+            replace_button.clicked.connect(lambda _, img_buffer=img_buffer: {
+                img_buffer.import_image(),
+            })
 
 
 

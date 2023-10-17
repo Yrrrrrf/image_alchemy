@@ -36,8 +36,8 @@ class Visualizer(QLabel):
         self.bg_pixmap = QPixmap(self.width(), self.height())
         # self.bg_pixmap.fill(Qt.GlobalColor.white)
 
-        template = '1x1'
-        # template = '2c'
+        # template = '1x1'
+        template = '2c'
         # template = '3r'
         self.border = 16
         # todo: fix the border behavior for some templates

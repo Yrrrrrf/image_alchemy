@@ -21,7 +21,7 @@ class ImageBuffer(QLabel):
     '''
     Image buffer class reference to the image buffer of the application.
     '''
-    img: np.ndarray  # the image
+    # img: np.ndarray  # the image
     # import_button: QWidget  # the import button
     # delete_button: QWidget  # the delete button
     # replace_button: QWidget  # the replace button
@@ -126,8 +126,20 @@ class ImageBuffer(QLabel):
         print(f"     Shape: ({height}, {width}) = {height*width} pixels")
 
         self.pix_data_map = QPixmap(self.img_path)  # Create a QPixmap object (contains image data)
-        self.img = cv.imread(self.img_path)  # Create a np.ndarray object (contains image data)
-        self.cost_matrix = get_cost_matrix(self.img)  # Create a np.ndarray object (contains cost matrix data)
+        # self.img = cv.imread(self.img_path)  # Create a np.ndarray object (contains image data)
+        # self.cost_matrix = get_cost_matrix(self.img)  # Create a np.ndarray object (contains cost matrix data)
         # self.draw_shapes(self.pix_data_map)  # ^ draw shapes on the image
 
         self.setPixmap(self.pix_data_map)  # set the image buffer to the selected image
+
+
+    # * DELETE
+    def remove_image(self):
+        '''
+        Remove the image buffer from the file system.
+        '''
+        self.img_path = ''
+        self.pix_data_map = QPixmap(512, 512)
+        self.pix_data_map.fill(Qt.GlobalColor.transparent)  # * This will be a pixmap with all values set as null (None)
+        self.setPixmap(self.pix_data_map)
+        print(f"\033[32mSuccessfully\x1B[37m removed image")
