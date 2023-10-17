@@ -5,8 +5,6 @@ from dataclasses import dataclass  # dataclass decorator
 from sass import compile  # compile the sass stylesheet
 from PyQt6.QtWidgets import QMainWindow
 from PyQt6.QtGui import QIcon
-from PyQt6.QtCore import QTimer
-from components.loading_screen import LoadingScreen
 
 # Own imports
 from config.globals import *
@@ -36,25 +34,6 @@ class App(QMainWindow):
         self.setMinimumSize(Config.WIDTH.value, Config.HEIGHT.value)
         self.setMouseTracking(True)  # track mouse even when not clicking
         # self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)  # focus on the window
-
-
-
-        # todo: Fix the Loading Screen to be the first thing to appear
-        # self.loading_screen = LoadingScreen()
-
-        # self.timer = QTimer()
-        # self.timer.timeout.connect(self.loading_screen.loading)
-        # self.timer.start(20)
-
-        # self.loading_screen.show()
-
-
-
-
-
-
-
-
 
         # * Set a stylesheet for the app
         self._set_theme('default')

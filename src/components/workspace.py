@@ -100,7 +100,6 @@ class Workspace(QScrollArea):
             })
 
 
-
     # def mousePressEvent(self, event):
     #     '''
     #     Print the pixel data of the image

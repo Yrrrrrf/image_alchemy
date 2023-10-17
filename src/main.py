@@ -16,8 +16,8 @@ from PyQt6.QtCore import QTimer
 
 # local imports
 from components.loading_screen import LoadingScreen
-from config.globals import Config  # import config
-from components.app import App  # import app
+from config.globals import Config
+from components.app import App
 
 
 def main() -> None:
