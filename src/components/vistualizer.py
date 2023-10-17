@@ -25,7 +25,7 @@ class Visualizer(QLabel):
     border: int = 0
 
 
-    def __init__(self, workspace: QFrame, template: str = '1x1', border: int = 16):
+    def __init__(self, workspace: QFrame, template: str = '1x1', border: int = 0):
     # def __init__(self, workspace: QFrame):
         super().__init__(workspace)
         self.setProperty('class', 'visualizer')
@@ -36,8 +36,10 @@ class Visualizer(QLabel):
         self.bg_pixmap = QPixmap(self.width(), self.height())
         # self.bg_pixmap.fill(Qt.GlobalColor.white)
 
-        # template = '1x1'
-        self.border = border  # 16
+        template = '1x1'
+        # template = '2c'
+        # template = '3r'
+        self.border = 16
         # todo: fix the border behavior for some templates
 
         self.set_template(template)  # also set a default ImageBuffer

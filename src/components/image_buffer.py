@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 # third-party imports
 from PyQt6.QtWidgets import QLabel, QMessageBox, QWidget, QFileDialog, QFrame
-from PyQt6.QtGui import QPixmap
+from PyQt6.QtGui import QPixmap, QImage
 from PyQt6.QtCore import Qt
 import numpy as np
 import cv2 as cv
@@ -22,6 +22,10 @@ class ImageBuffer(QLabel):
     Image buffer class reference to the image buffer of the application.
     '''
     img: np.ndarray  # the image
+    # import_button: QWidget  # the import button
+    # delete_button: QWidget  # the delete button
+    # replace_button: QWidget  # the replace button
+
     # pix_data_map: QPixmap  # the image data
     # img_path: str = Assets.TEST_IMAGES.value+'lenna.png'  # the path of the image buffer
     # img_path: str =   # the path of the image buffer
@@ -71,51 +75,59 @@ class ImageBuffer(QLabel):
 
 
     # # * READ
-    # def import_image(self):
-    #     '''
-    #     Open a file dialog to select an image.
+    def import_image(self):
+        '''
+        Open a file dialog to select an image.
 
-    #     If the selected image is valid, it will update the image path of the image buffer.  
+        If the selected image is valid, it will update the image path of the image buffer.  
         
-    #     If it's not valid, it will show an error message and do nothing. So the `image_path` will not be updated.
+        If it's not valid, it will show an error message and do nothing. So the `image_path` will not be updated.
         
-    #     ## Returns:
-    #         - bool: `True` if the image is valid, `False` otherwise
-    #     '''
-    #     img_path = QFileDialog.getOpenFileName(self, 
-    #         'Open File',  # title
-    #         Assets.TEST_IMAGES.value,  # initial dir
-    #         'Image Files ( *.bmp  *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm)'  # filter
-    #     )[0]  # get the path of the selected image
+        ## Returns:
+            - bool: `True` if the image is valid, `False` otherwise
+        '''
+        img_path = QFileDialog.getOpenFileName(self, 
+            'Open File',  # title
+            Assets.TEST_IMAGES.value,  # initial dir
+            'Image Files ( *.bmp  *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm)'  # filter
+        )[0]  # get the path of the selected image
 
-    #     match img_path:  # check if the image is valid
-    #         case '':  # if the image is not valid, show an error message
-    #             print('\033[31mError: No file selected!\x1B[37m')
-    #             QMessageBox.critical(self, 'Error', 'Please select a file.')
-    #         case _:  # if the image is valid, show the image info
-    #             # Return an error if the image is out of the root directory
-    #             self.img_path = img_path.split('image_alchemy')[1][1:]  # get the relative path of the selected image
-    #             self.update_image()  # Set the image buffer to the selected image
+        match img_path:  # check if the image is valid
+            case '':  # if the image is not valid, show an error message
+                print('\033[31mError: No file selected!\x1B[37m')
+                QMessageBox.critical(self, 'Error', 'Please select a file.')
+            case _:  # if the image is valid, show the image info
+                # Return an error if the image is out of the root directory
+                self.img_path = img_path.split('image_alchemy')[1][1:]  # get the relative path of the selected image
+                self.update_image()
 
+                # # Update the image buffer to show the selected image
+                # self.img = cv.imread(self.img_path)  # read image with opencv
+                # self.img = cv.cvtColor(self.img, cv.COLOR_BGR2RGB)  # convert image to RGB format
+                # height, width, channel = self.img.shape  # get image infos
+                # self.pix_data_map = QPixmap.fromImage(QImage(self.img.data, width, height, channel*width, QImage.Format.Format_RGB888))
+                # self.setPixmap(self.pix_data_map)  # set pixmap to label widget
+                # print(f"Selected: \033[32m{self.img_path}\x1B[37m")  # Print the image info
+                
 
-    # # * UPDATE
-    # def update_image(self) -> None:
-    #     '''
-    #     Set the image buffer to a specific image.
+    # * UPDATE
+    def update_image(self) -> None:
+        '''
+        Set the image buffer to a specific image.
         
-    #     ## Arguments:
-    #         - img_path: `str`: the path of the image
-    #     '''
-    #     height, width, _ = cv.imread(self.img_path).shape  # get the image info
-    #     self.setFixedSize(width, height)  # update the size of the image buffer
+        ## Arguments:
+            - img_path: `str`: the path of the image
+        '''
+        height, width, _ = cv.imread(self.img_path).shape  # get the image info
+        self.setFixedSize(width, height)  # update the size of the image buffer
 
-    #     # Print the image info
-    #     print(f"Selected: \033[32m{self.img_path}\x1B[37m")
-    #     print(f"     Shape: ({height}, {width}) = {height*width} pixels")
+        # Print the image info
+        print(f"Selected: \033[32m{self.img_path}\x1B[37m")
+        print(f"     Shape: ({height}, {width}) = {height*width} pixels")
 
-    #     self.pix_data_map = QPixmap(self.img_path)  # Create a QPixmap object (contains image data)
-    #     self.img = cv.imread(self.img_path)  # Create a np.ndarray object (contains image data)
-    #     self.cost_matrix = get_cost_matrix(self.img)  # Create a np.ndarray object (contains cost matrix data)
-    #     # self.draw_shapes(self.pix_data_map)  # ^ draw shapes on the image
+        self.pix_data_map = QPixmap(self.img_path)  # Create a QPixmap object (contains image data)
+        self.img = cv.imread(self.img_path)  # Create a np.ndarray object (contains image data)
+        self.cost_matrix = get_cost_matrix(self.img)  # Create a np.ndarray object (contains cost matrix data)
+        # self.draw_shapes(self.pix_data_map)  # ^ draw shapes on the image
 
-    #     self.setPixmap(self.pix_data_map)  # set the image buffer to the selected image
+        self.setPixmap(self.pix_data_map)  # set the image buffer to the selected image

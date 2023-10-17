@@ -3,12 +3,10 @@ from dataclasses import dataclass
 
 # third-party imports
 from PyQt6.QtWidgets import QGridLayout, QFrame, QTabWidget, QPushButton, QWidget
-# the QStackedLayout stacks the widgets on top of each other (like a deck of cards)
-# from PyQt6.QtWidgets import QStackedLayout  
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import Qt  # * for AlignmentFlag
 
-# own imports
+# local imports
 from components.workspace import Workspace
 from components.side_panel import SidePanel
 from config.globals import Assets
@@ -56,11 +54,15 @@ class Display(QFrame):
         workspace_tabs.setMovable(True)
 
         # * Print the name of the selected tab
-        workspace_tabs.currentChanged.connect(lambda index: print(f"Selected tab: {workspace_tabs.tabText(index)}"))
+        # workspace_tabs.currentChanged.connect(lambda index: print(f"Selected tab: {workspace_tabs.tabText(index)}"))
 
         # * New Tab button
         add_button = QPushButton(QIcon(Assets.ICONS.value+'sum.png'), '')
-        add_button.clicked.connect(lambda: workspace_tabs.addTab(Workspace(), f'Workspace {workspace_tabs.count()+1}'))
+        add_button.clicked.connect(lambda: {
+            workspace_tabs.addTab(Workspace(), f'Workspace {workspace_tabs.count()+1}'),
+            # print(f'Added tab {workspace_tabs.count()}'),
+            }
+        )
         workspace_tabs.setCornerWidget(add_button, Qt.Corner.TopRightCorner)
 
         # * Close Tab button

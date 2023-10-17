@@ -30,7 +30,8 @@ class SidePanel(QFrame):  # QWidget, but temporary is a QFrame just for testing
         # self.setFixedWidth(self.margin*4+SideBarButton.size)  # set the initial size of the side bar
 
         # This also need to be stored as a variable to manipulate it later
-        SPButton(self, 'import', [{'name': 'Crop', 'fn': lambda: print('Crop')}])
+        s = SPButton(self, 'import', [{'name': 'Crop', 'fn': lambda: print('Crop')}])
+        s.move(self.margin, self.margin)  # * move the button to the top of the side bar
         # Is not a var yet because is a test of the SPButton (SidePanelButton) button
 
 
@@ -63,16 +64,14 @@ class SPButton(QPushButton):
         self.name = name
         self.operations = operations
         self.setParent(side_panel)
+        self.setProperty('class', 'sidebar_button')
+
         # If there's only one file with that posible name*, then the path will be autocompleted to the file.
-        print(Assets.ICONS.value+self.name.lower()+'.png')
+        # print(Assets.ICONS.value+self.name.lower()+'.png')
+
         self.setIcon(QIcon(Assets.ICONS.value+self.name.lower()+'.png'))
         self.setIconSize(QSize((int)(self.size*0.8), (int)(self.size*0.8)))
         self.setFixedSize(self.size, self.size)  # default size
-        self.setProperty('class', 'sidebar_button')
-
         # set the operation to execute when the button is pressed
         self.clicked.connect(self.operations[0]['fn'])
-
-
-
 

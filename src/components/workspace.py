@@ -4,9 +4,11 @@
 from dataclasses import dataclass
 
 # third-party imports
-from PyQt6.QtWidgets import QPushButton, QFrame
+from PyQt6.QtWidgets import QPushButton, QFrame, QScrollArea
+# the QStackedLayout stacks the widgets on top of each other (like a deck of cards)
+# from PyQt6.QtWidgets import QStackedLayout  
 from PyQt6.QtGui import QIcon, QPainter, QColor
-from PyQt6.QtCore import QSize
+from PyQt6.QtCore import QSize, Qt
 import numpy as np
 import cv2 as cv
 
@@ -17,7 +19,8 @@ from components.vistualizer import Visualizer
 
 
 @dataclass
-class Workspace(QFrame):
+# todo: probably this should be a QScrollArea
+class Workspace(QScrollArea):
     '''
     # This probably should hold an ImageVisualizer instead of an ImageBuffer
     # And the ImageVisualizer should hold one or more ImageBuffers (for the layers)
@@ -31,6 +34,16 @@ class Workspace(QFrame):
         super().__init__()
         self.setProperty('class', 'workspace')
         self.visualizer = Visualizer(self)
+
+
+
+        # * See the scroll bars only when needed
+
+        # self.setWidgetResizable(True)
+        # self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        # self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+
+
 
         # * This is a temporary solution
         # * It's used to enable the MouseMoveEvent updates without clicking
@@ -48,6 +61,48 @@ class Workspace(QFrame):
 
         # normalized_cost_matrix = cv.normalize(self.image_buffer.cost_matrix, None, 0, 255, cv.NORM_MINMAX)  # type: ignore
         # cv.imwrite(Assets.TEMP_IMAGES.value+'normalized_cost_matrix.png', normalized_cost_matrix)
+
+        self.set_visualizer_buttons()
+        # Set the 
+
+
+    def set_visualizer_buttons(self):
+        '''
+        Set the buttons of the visualizer.
+        '''
+        for img_buffer in self.visualizer.images:
+            import_button = self.define_button('import')
+            import_button.move(img_buffer.x() + (int)((img_buffer.width()-import_button.width())/2), img_buffer.y() + (int)((img_buffer.height()-import_button.height())/2))
+
+            delete_button = self.define_button('remove', b_size=32)
+            delete_button.move(img_buffer.x() + img_buffer.width() - delete_button.width(), img_buffer.y() - delete_button.height() - 4)
+            delete_button.hide()
+
+            replace_button = self.define_button('replace', b_size=32)
+            replace_button.move(img_buffer.x() + img_buffer.width() - 2 * delete_button.width() - 8, img_buffer.y() - delete_button.height() - 4)
+            replace_button.hide()
+
+            import_button.clicked.connect(lambda: {
+                img_buffer.import_image(),
+                import_button.hide(),
+                delete_button.show(),
+                replace_button.show(), 
+                }
+            )
+
+            delete_button.clicked.connect(lambda: {
+                print('delete'),
+                import_button.show(),
+                delete_button.hide(),
+                replace_button.hide(),
+                }
+            )
+
+            replace_button.clicked.connect(lambda: {
+                print('replace'),
+                }
+            )
+
 
 
     # def mousePressEvent(self, event):
@@ -134,7 +189,7 @@ class Workspace(QFrame):
     # ^ Because the image buffer should only be responsible for displaying the image
     # ^ And some buttons shouold be out of the image buffer boundaries
     # ^ Only the import button should be inside the image buffer
-    def define_button(self, icon_type: str) -> QPushButton:
+    def define_button(self, icon_type: str, b_size: int = 72) -> QPushButton:
         '''
         Define a button with a specific icon.
 
@@ -146,28 +201,9 @@ class Workspace(QFrame):
         '''
         button = QPushButton(self)
         button.setIcon(QIcon(Assets.ICONS.value+icon_type+'.png'))
-        button.setIconSize(QSize(64, 64))
-        button.setFixedSize(72, 72)
+        button.setIconSize(QSize((int)(b_size*0.8), (int)(b_size*0.8)))
+        button.setFixedSize(b_size, b_size)
         button.setStyleSheet('QPushButton {background-color: white; border: 1px solid white; border-radius: 10%;} QPushButton:hover{background-color : lightgray;}')
-        # Center the button in the image buffer
-        button.move((int)((self.width()-button.width())/2), (int)((self.height()-button.height())/2))
+
         return button
 
-    #  ^ Button functions
-    # import_button: QPushButton
-    # replace_button: QPushButton
-    # delete_button: QPushButton
-
-    # ^ This buttons must be on every image buffer
-    # ? Define the buttons
-    # self.import_button = self.define_button('import')
-    # self.import_button.clicked.connect(self.import_image)
-
-    # self.replace_button = self.define_button('replace')
-    # self.replace_button.clicked.connect(self.import_image)
-    # self.replace_button.hide()
-
-    # * idk if we need this button (maybe we can just use the replace button)
-    # self.delete_button = self.define_button('remove')
-    # self.delete_button.clicked.connect(self.delete_image)
-    # self.delete_button.hide()

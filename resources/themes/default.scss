@@ -69,7 +69,26 @@ $light_hard_contr:   #98aba7;
     border: 1px solid $light_accent_contr;
     background-color: $dark_base;
     border-radius: 10%;
+
 }
+
+// .QScrollBar:vertical,
+// .QScrollBar:horizontal {
+//     background: red;
+//     height: 15px;
+// }
+
+// .QScrollBar::handle:vertical,
+// .QScrollBar::handle:horizontal
+// {
+//     background: $dark_accent;
+//     min-height: 20px;
+// }
+
+
+
+
+
 // * Workspace Tabs
 .workspace_tabs
 {
@@ -82,7 +101,7 @@ $light_hard_contr:   #98aba7;
         padding: 5px;
         color: $light_accent;  // font color
     }
-    .QTabBar::tab::hover
+    .QTabBar::tab:hover
     {
         background-color: $light_accent;
         color: white
@@ -90,7 +109,7 @@ $light_hard_contr:   #98aba7;
 
     // Selected Tab
     .QTabBar::tab::selected,
-    .QTabBar::tab::selected::hover 
+    .QTabBar::tab::selected:hover 
     {
         background-color: $light_accent_contr;
         border: 2px solid $light_base;
@@ -109,7 +128,7 @@ $light_hard_contr:   #98aba7;
 
     // Close Button
     .QTabBar::close-button {image: url('resources/img/static/trash.png');}
-    .QTabBar::close-button::hover {background-color: white;}
+    .QTabBar::close-button:hover {background-color: white;}
 }
 // todo: check why this doesn't work when it's inside the .workspace_tabs class
 QTabWidget::pane {  // this also belongs to the .workspace_tabs class but it doesn't work inside it
@@ -155,6 +174,35 @@ QTabWidget::pane {  // this also belongs to the .workspace_tabs class but it doe
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // * Image Buffer
 .image_buffer,
 .import_button
@@ -170,21 +218,23 @@ QTabWidget::pane {  // this also belongs to the .workspace_tabs class but it doe
     background-color: $dark_base_faded;
     border : 1px solid $light_base_contr;
 }
-// .import_button {
-//     border: none;
-// }
-// .import_button:hover {
-// }
 
 
 
 
 
-// QSpinBox, QComboBox {
-//     font-family: 'Consolas',  monospace;
-//     background-color: $dark_base;
-//     color: $light_accent;
-// }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // * 
