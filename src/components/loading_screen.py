@@ -7,28 +7,29 @@ from PyQt6.QtWidgets import QApplication, QFrame, QProgressBar, QLabel
 from PyQt6.QtGui import QImage, QFont, QPixmap
 from PyQt6.QtCore import Qt, QTimer
 
+# local imports
+from config.globals import Assets
 
 @dataclass
 class LoadingScreen(QFrame):
     '''
     A progress bar with a custom style
     '''
+    timer: QTimer
     title_bar: QLabel
     progress_bar: QProgressBar
-    timer: QTimer
     progress: int = 0
 
 
     def __init__(self):
         super().__init__()
         self.setProperty('class', 'loading_screen')
-        self.setWindowTitle('Loading Scren')
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
         self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        self.setFixedSize(420, 240)
+        self.setFixedSize(420, 256)
 
-        self.set_image('resources\\img\\static\\philosophers-stone.png')
+        self.set_image(f'{Assets.ICONS.value}philosophers-stone.png')
         self.set_title_bar()
         self.set_progress_bar()
 
@@ -80,8 +81,6 @@ class LoadingScreen(QFrame):
         self.progress_bar.setGeometry(60, 180, 300, 32)
         self.progress_bar.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.progress_bar.setFont(QFont('Segoe Print', 10, QFont.Weight.Bold))
-
-        # ? Set progress bar style
         self.progress_bar.setStyleSheet('QProgressBar {border: 1px solid #FFD700; border-radius: 10px; text-align: center;} QProgressBar::chunk {background-color: #FFD700;}')
 
 

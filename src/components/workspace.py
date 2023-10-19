@@ -1,12 +1,8 @@
-# This file contains the workspace component
-
 # standard imports
 from dataclasses import dataclass
 
 # third-party imports
-from PyQt6.QtWidgets import QPushButton, QFrame, QScrollArea
-# the QStackedLayout stacks the widgets on top of each other (like a deck of cards)
-# from PyQt6.QtWidgets import QStackedLayout  
+from PyQt6.QtWidgets import QScrollArea
 from PyQt6.QtGui import QIcon, QPainter, QColor
 from PyQt6.QtCore import QSize, Qt
 import numpy as np
@@ -14,7 +10,6 @@ import cv2 as cv
 
 # local imports
 from logic.intel_sc import *
-from config.globals import Assets
 from components.vistualizer import Visualizer
 
 
@@ -22,10 +17,7 @@ from components.vistualizer import Visualizer
 # todo: probably this should be a QScrollArea
 class Workspace(QScrollArea):
     '''
-    # This probably should hold an ImageVisualizer instead of an ImageBuffer
-    # And the ImageVisualizer should hold one or more ImageBuffers (for the layers)
-    # Also the ImageVisualizer should be responsible for managing all the ImageBuffers
-    # And the Workspace should be responsible for managing all the ImageVisualizers
+    This probably should hold an ImageVisualizer instead of an ImageBuffer
     '''
     visualizer: Visualizer
 
@@ -34,70 +26,42 @@ class Workspace(QScrollArea):
         super().__init__()
         self.setProperty('class', 'workspace')
         self.visualizer = Visualizer(self)
+        self.visualizer.move(80, 80)  # Move the Visualizer
 
-        # * See the scroll bars only when needed
+        self._set_visualizer_buttons()
+
 
         # self.setWidgetResizable(True)
         # self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         # self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 
-
-
-        # * This is a temporary solution
-        # * It's used to enable the MouseMoveEvent updates without clicking
         # self.setMouseTracking(True)  # enable mouse tracking without clicking
 
-        # todo: this shouln't be a class attribute
-        # ^ I mean, this should be a local variable
-        # ^ Just for testing purposes (it will be removed later) 
-        # self.trace_points = []  # create a list of the points
-        # self.trace_points = [(0, 0)]  # create a list of the points
 
-        # * Get a normalized version of the cost matrix (for debugging purposes)
-        # * The original cost matrix is not normalized & it's not a good idea to display it
-        # * Because it has values that are too low, so we can't really see anything
-
-        # normalized_cost_matrix = cv.normalize(self.image_buffer.cost_matrix, None, 0, 255, cv.NORM_MINMAX)  # type: ignore
-        # cv.imwrite(Assets.TEMP_IMAGES.value+'normalized_cost_matrix.png', normalized_cost_matrix)
-
-        self.set_visualizer_buttons()
-        # Set the 
-
-
-    def set_visualizer_buttons(self):
+    def _set_visualizer_buttons(self):
         '''
-        Set the buttons of the visualizer.
+        Set the buttons that interact each ImageBuffer
+
+        The buttons are defined in the ImageBuffer class but the Workspace is the one that handles the buttons.
+
+        This is because the buttons are outside the ImageBuffer boundaries.
         '''
-        # todo: check why the buttons are setted to the last image buffer
         for img_buffer in self.visualizer.images:
-            import_button = self.define_button('import')
-            import_button.move(img_buffer.x() + (int)((img_buffer.width()-import_button.width())/2), img_buffer.y() + (int)((img_buffer.height()-import_button.height())/2))
-
-            delete_button = self.define_button('remove', b_size=32)
-            delete_button.move(img_buffer.x() + img_buffer.width() - delete_button.width(), img_buffer.y() - delete_button.height() - 4)
-            delete_button.hide()
-
-            replace_button = self.define_button('replace', b_size=32)
-            replace_button.move(img_buffer.x() + img_buffer.width() - 2 * delete_button.width() - 8, img_buffer.y() - delete_button.height() - 4)
-            replace_button.hide()
-
-            import_button.clicked.connect(lambda _, img_buffer=img_buffer: {
-                img_buffer.import_image(),
-                import_button.hide(),
-                delete_button.show(),
-                replace_button.show(),
-            })
-
-            delete_button.clicked.connect(lambda _, img_buffer=img_buffer: {
-                img_buffer.remove_image(),
-                import_button.show(),
-                delete_button.hide(),
-                replace_button.hide(),
-            })
-
-            replace_button.clicked.connect(lambda _, img_buffer=img_buffer: {
-                img_buffer.import_image(),
-            })
+            img_buffer.import_button.setParent(self)
+            img_buffer.import_button.move(  # Import button
+                self.visualizer.x() + img_buffer.x() + (img_buffer.width() - img_buffer.import_button.width()) // 2, 
+                self.visualizer.y() + img_buffer.y() + (img_buffer.height() - img_buffer.import_button.height()) // 2
+            )
+            img_buffer.delete_button.setParent(self)
+            img_buffer.delete_button.move(  # Delete button
+                self.visualizer.x() + img_buffer.x() + img_buffer.width() - img_buffer.delete_button.width() - 4, 
+                self.visualizer.y() + img_buffer.y() - img_buffer.delete_button.height() - 4
+            )
+            img_buffer.replace_button.setParent(self)
+            img_buffer.replace_button.move(  # Replace button
+                self.visualizer.x() + img_buffer.x() + img_buffer.width() - 2 * img_buffer.delete_button.width() - 8, 
+                self.visualizer.y() + img_buffer.y() - img_buffer.delete_button.height() - 4
+            )
 
 
     # def mousePressEvent(self, event):
@@ -175,30 +139,3 @@ class Workspace(QScrollArea):
         #     # self.trace_points.append((x, y))  # add the current mouse position to the trace points
         #     # self.update()  # update the widget content
         #     self.image_buffer.setPixmap(self.image_buffer.pix_data_map)
-
-
-    # ^ --------------------------------------------------------------------------------------
-
-    # ^ DEFINE SOME BUTTONS TO EDIT THE IMAGE (IMPORT, REPLACE, REMOVE)
-    # ^ I think that this shlould be part of the workspace or something like that
-    # ^ Because the image buffer should only be responsible for displaying the image
-    # ^ And some buttons shouold be out of the image buffer boundaries
-    # ^ Only the import button should be inside the image buffer
-    def define_button(self, icon_type: str, b_size: int = 72) -> QPushButton:
-        '''
-        Define a button with a specific icon.
-
-        ## Arguments:
-            - icon_type: the type of the icon (import, replace, remove)
-
-        ## Returns:
-            - the button instance
-        '''
-        button = QPushButton(self)
-        button.setIcon(QIcon(Assets.ICONS.value+icon_type+'.png'))
-        button.setIconSize(QSize((int)(b_size*0.8), (int)(b_size*0.8)))
-        button.setFixedSize(b_size, b_size)
-        button.setStyleSheet('QPushButton {background-color: white; border: 1px solid white; border-radius: 10%;} QPushButton:hover{background-color : lightgray;}')
-
-        return button
-

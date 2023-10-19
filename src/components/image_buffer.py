@@ -2,9 +2,9 @@
 from dataclasses import dataclass
 
 # third-party imports
-from PyQt6.QtWidgets import QLabel, QMessageBox, QWidget, QFileDialog, QFrame
-from PyQt6.QtGui import QPixmap, QImage
-from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QLabel, QMessageBox, QWidget, QFileDialog, QPushButton
+from PyQt6.QtGui import QPixmap, QImage, QIcon, QPainter, QColor
+from PyQt6.QtCore import Qt, QSize
 import numpy as np
 import cv2 as cv
 
@@ -16,19 +16,17 @@ from logic.intel_sc import *
 @dataclass
 # class ImageBuffer(QLabel, QPixmap):
 class ImageBuffer(QLabel):
-    # QLabel allows us to display images
-    # QPixmap allows us to store images
     '''
     Image buffer class reference to the image buffer of the application.
-    '''
-    # img: np.ndarray  # the image
-    # import_button: QWidget  # the import button
-    # delete_button: QWidget  # the delete button
-    # replace_button: QWidget  # the replace button
 
-    # pix_data_map: QPixmap  # the image data
-    # img_path: str = Assets.TEST_IMAGES.value+'lenna.png'  # the path of the image buffer
-    # img_path: str =   # the path of the image buffer
+    It implements the RUD (Read, Update, Delete) operations of the image buffer.
+
+    The Create (save image) operation is handled by the Visualizer class because it's the one that contains the image buffer.
+    '''
+    # * Interaction buttons
+    import_button: QPushButton
+    delete_button: QPushButton
+    replace_button: QPushButton
 
 
     def __init__(self, parent: QWidget, width: int = 512, height: int = 512):
@@ -48,30 +46,7 @@ class ImageBuffer(QLabel):
         # pixmap = QPixmap(Assets.TEST_IMAGES.value+'lenna.png')
         # self.setPixmap(pixmap)
 
-        # make the ImageBuffer invisible
-        # self.setVisible(False)
-
-        # & YESNT
-        # self.update_image()  # * Make the default image appear (Lenna)
-
-
-    # # * CREATE
-    # def save_image(self):
-    #     '''
-    #     Save the image buffer to the file system.
-    #     If the image is not valid, it will show an error message.
-
-    #     The image is stored on the `TEMP_IMAGES` directory.
-        
-    #     ## Arguments:
-    #         - img_path: `str`: the path of the image
-    #     '''
-    #     store_path = Assets.TEMP_IMAGES.value + 'stored_image.png'
-    #     match self.pix_data_map.save(store_path):
-    #         case True:  # if the image is valid, show the image info
-    #             print(f"\033[32mSuccessfully\x1B[37m stored at: \033[34m{store_path}\x1B[37m")
-    #         case False:  # if the image is not valid, show an error message
-    #             print(f"\033[31mError storing img\x1B[37m")
+        self._set_buttons()
 
 
     # # * READ
@@ -80,9 +55,9 @@ class ImageBuffer(QLabel):
         Open a file dialog to select an image.
 
         If the selected image is valid, it will update the image path of the image buffer.  
-        
+
         If it's not valid, it will show an error message and do nothing. So the `image_path` will not be updated.
-        
+
         ## Returns:
             - bool: `True` if the image is valid, `False` otherwise
         '''
@@ -97,21 +72,12 @@ class ImageBuffer(QLabel):
                 print('\033[31mError: No file selected!\x1B[37m')
                 QMessageBox.critical(self, 'Error', 'Please select a file.')
             case _:  # if the image is valid, show the image info
-                # Return an error if the image is out of the root directory
                 self.img_path = img_path.split('image_alchemy')[1][1:]  # get the relative path of the selected image
-                self.update_image()
+                self.set_image()
 
-                # # Update the image buffer to show the selected image
-                # self.img = cv.imread(self.img_path)  # read image with opencv
-                # self.img = cv.cvtColor(self.img, cv.COLOR_BGR2RGB)  # convert image to RGB format
-                # height, width, channel = self.img.shape  # get image infos
-                # self.pix_data_map = QPixmap.fromImage(QImage(self.img.data, width, height, channel*width, QImage.Format.Format_RGB888))
-                # self.setPixmap(self.pix_data_map)  # set pixmap to label widget
-                # print(f"Selected: \033[32m{self.img_path}\x1B[37m")  # Print the image info
-                
 
     # * UPDATE
-    def update_image(self) -> None:
+    def set_image(self) -> None:
         '''
         Set the image buffer to a specific image.
         
@@ -119,18 +85,17 @@ class ImageBuffer(QLabel):
             - img_path: `str`: the path of the image
         '''
         height, width, _ = cv.imread(self.img_path).shape  # get the image info
-        self.setFixedSize(width, height)  # update the size of the image buffer
-
-        # Print the image info
         print(f"Selected: \033[32m{self.img_path}\x1B[37m")
         print(f"     Shape: ({height}, {width}) = {height*width} pixels")
+        
+        # self.setFixedSize(width, height)  # update the size of the image buffer
+        # self.setScaledContents(True)  # strecth the image to fit the image buffer
 
-        self.pix_data_map = QPixmap(self.img_path)  # Create a QPixmap object (contains image data)
-        # self.img = cv.imread(self.img_path)  # Create a np.ndarray object (contains image data)
-        # self.cost_matrix = get_cost_matrix(self.img)  # Create a np.ndarray object (contains cost matrix data)
-        # self.draw_shapes(self.pix_data_map)  # ^ draw shapes on the image
+        self.setPixmap(QPixmap(self.img_path))  # set the image buffer to the selected image
 
-        self.setPixmap(self.pix_data_map)  # set the image buffer to the selected image
+        self.import_button.hide()
+        self.delete_button.show()
+        self.replace_button.show()
 
 
     # * DELETE
@@ -142,4 +107,48 @@ class ImageBuffer(QLabel):
         self.pix_data_map = QPixmap(512, 512)
         self.pix_data_map.fill(Qt.GlobalColor.transparent)  # * This will be a pixmap with all values set as null (None)
         self.setPixmap(self.pix_data_map)
+
+        #  * Update the buttons state
+        self.delete_button.hide()
+        self.import_button.show()
+        self.replace_button.hide()
+
         print(f"\033[32mSuccessfully\x1B[37m removed image")
+
+
+    # * Define an ImageBuffer button (import, replace, remove)
+    def _define_ib_button(self, icon_type: str, b_size: int = 72) -> QPushButton:
+        '''
+        Define a button with a specific icon.
+
+        ## Arguments:
+            - icon_type: the type of the icon (import, replace, remove)
+
+        ## Returns:
+            - the button instance
+        '''
+        button = QPushButton()
+        button.setIcon(QIcon(Assets.ICONS.value+icon_type+'.png'))
+        button.setIconSize(QSize((int)(b_size*0.8), (int)(b_size*0.8)))
+        button.setFixedSize(b_size, b_size)
+        button.setStyleSheet('QPushButton {background-color: white; border: 1px solid white; border-radius: 10%;} QPushButton:hover{background-color : lightgray;}')
+        return button
+
+
+    # * Set interaction Buttons (import, replace, remove)
+    def _set_buttons(self):
+        '''
+        Set the buttons that interact with the ImageBuffer.
+        
+        The buttons are defined in the ImageBuffer class but the Workspace is the one that handles the buttons.
+        '''
+        self.import_button = self._define_ib_button('import')
+        self.import_button.clicked.connect(self.import_image)
+        
+        self.delete_button = self._define_ib_button('remove', b_size=32)
+        self.delete_button.clicked.connect(self.remove_image)
+        self.delete_button.hide()
+
+        self.replace_button = self._define_ib_button('replace', b_size=32)
+        self.replace_button.clicked.connect(self.import_image)
+        self.replace_button.hide()

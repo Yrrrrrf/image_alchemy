@@ -34,12 +34,15 @@ class Visualizer(QLabel):
 
         # * Color the background
         self.bg_pixmap = QPixmap(self.width(), self.height())
-        # self.bg_pixmap.fill(Qt.GlobalColor.white)
+        self.bg_pixmap.fill(Qt.GlobalColor.transparent)
 
         # template = '1x1'
-        # template = '2c'
-        # template = '3r'
-        # self.border = 16
+        template = '2c'
+        # template = '2c1t'
+        # template = '2c2t'
+        template = '3r'
+        # self.border = 32
+        self.border = 16
         # todo: fix the border behavior for some templates
 
         self.set_template(template)  # also set a default ImageBuffer
@@ -50,6 +53,7 @@ class Visualizer(QLabel):
         '''
         Draw the images on the visualizer.
         '''
+        # todo: paint the image on the Visualizer
         painter = QPainter(self.bg_pixmap)
         for image in self.images:
             painter.drawPixmap(image.x(), image.y(), image.pixmap())

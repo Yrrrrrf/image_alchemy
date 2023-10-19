@@ -72,6 +72,7 @@ $light_hard_contr:   #98aba7;
 
 }
 
+// todo: Modify the scroll bar style to make it look better
 // .QScrollBar:vertical,
 // .QScrollBar:horizontal {
 //     background: red;
@@ -84,9 +85,6 @@ $light_hard_contr:   #98aba7;
 //     background: $dark_accent;
 //     min-height: 20px;
 // }
-
-
-
 
 
 // * Workspace Tabs
@@ -139,28 +137,7 @@ QTabWidget::pane {  // this also belongs to the .workspace_tabs class but it doe
 }
 
 
-// * Side Panel
-.side_panel {
-    background-color: $dark_accent;
-    border: 1px solid $light_accent_contr;
-    border-radius: 10%;
-}
-
-// * Side Panel Buttons
-// .sidebar_button, .operation_button {
-//     font-weight: 600;
-//     background: $dark_accent;
-//     color: $light_accent;
-//     border: 1px solid $light_accent_contr;
-//     border-radius: 10%;
-// }
-// .sidebar_button:hover, .operation_button:hover {
-//     background-color: $light_hard;
-//     color: $dark_base;
-//     border: 3px solid $light_hard_contr;
-//     border-radius: 8%;
-// }
-
+// ? ------------------------------------------------------------------------------------------
 
 // * Visualizer
 .visualizer {
@@ -174,35 +151,6 @@ QTabWidget::pane {  // this also belongs to the .workspace_tabs class but it doe
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // * Image Buffer
 .image_buffer,
 .import_button
@@ -210,38 +158,61 @@ QTabWidget::pane {  // this also belongs to the .workspace_tabs class but it doe
     background-color: white;
     // background-color: $dark_base_contr;
     border: 1px solid $light_accent_contr;
-    // border-radius: 10%;
+    border-radius: 10%;
 }
 .image_buffer:hover,
 .import_button:hover
 {
-    background-color: $dark_base_faded;
-    border : 1px solid $light_base_contr;
+    background-color : lightgray;
+    // background-color: $dark_base_faded;
+    // border : 1px solid $light_base_contr;
+}
+
+// ? ------------------------------------------------------------------------------------------
+
+
+// * Side Panel
+.side_panel {
+    background-color: $dark_accent;
+    border: 1px solid $light_accent_contr;
+    border-radius: 10%;
+}
+.side_panel:hover {
+    background-color: $dark_accent;  // this is a redundancy, is just to make sure that the background color doesn't change
+}
+
+// * Side Panel Buttons
+.sidebar_button, .operation_button {
+    background: white;
+    border-radius: 10%;
+    // * Uncomment this for the Font Awesome icons (still in development)
+    //     font-weight: 600;  // bold
+    // color: $light_accent;  // font color
+}
+.sidebar_button:hover, .operation_button:hover {
+    background-color: lightcyan;
+    border: 2px solid $light_hard_contr;
+    border-radius: 12%;
 }
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// * 
-.loading_bar {
-    // border: 1px solid $light_accent_contr;
-    border: 1px solid #FFD700;
-    border-radius: 10px;
-    text-align: center;
-    color: $light_accent;
-}
+// * Loading Screen
+// .loading_screen {
+//     // border: 1px solid $light_accent_contr;
+//     border: 1px solid #FFD700;
+//     border-radius: 10px;
+//     text-align: center;
+//     // color: $light_accent;
+// }
+// todo: Look for a way to add this inside the App class
+// QProgressBar {  // this is also the from the loading screen but the style is set on app.py, not in main.py
+//     border: 1px solid #FFD700; 
+//     border-radius: 10px; 
+//     text-align: center;
+// } 
+//     QProgressBar::chunk {
+//     background-color: #FFD700;
+// }

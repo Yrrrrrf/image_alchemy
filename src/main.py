@@ -29,8 +29,6 @@ def main() -> None:
     app = QApplication(argv)  # Manage the GUI application's control flow and main settings.
     main_window = App()  # Create the instance of the MainWindow
 
-    # * for now the loading screen is just a visual effect so it really do nothing (yet)
-    # * Loading Screen must load resources, stylesheet & other stuff before the main window
     # show_loading_screen = True
     show_loading_screen = False
     match show_loading_screen:
@@ -39,8 +37,7 @@ def main() -> None:
             loading_screen.show()
             QTimer.singleShot(2000, loading_screen.close)  # Execute the main_window.show() function after 2 seconds
             QTimer.singleShot(2000, main_window.show)  # Execute the main_window.show() function after 2 seconds
-        case False:
-            main_window.show()
+        case False: main_window.show()  # Show the main window
 
     exit(app.exec())  # Execute the app
 

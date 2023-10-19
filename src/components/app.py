@@ -1,5 +1,5 @@
 # standard imports
-from dataclasses import dataclass  # dataclass decorator
+from dataclasses import dataclass
 
 # Third-party imports
 from sass import compile  # compile the sass stylesheet
@@ -28,13 +28,12 @@ class App(QMainWindow):
         """
         super().__init__()
         self.setProperty('class', 'app_window')  # set the class name for the stylesheet
-
         self.setWindowTitle(Config.NAME.value)
         self.setWindowIcon(QIcon(f"{Assets.ICONS.value}philosophers-stone.png"))
         self.setMinimumSize(Config.WIDTH.value, Config.HEIGHT.value)
+
         self.setMouseTracking(True)  # track mouse even when not clicking
         # self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)  # focus on the window
-
         # * Set a stylesheet for the app
         self._set_theme('default')
         # self._set_theme('dev')
@@ -64,6 +63,3 @@ class App(QMainWindow):
         """
         with open(f"{Assets.THEMES.value}{theme}.scss", 'r') as file:
             self.setStyleSheet(compile(string=file.read()))
-
-
-    

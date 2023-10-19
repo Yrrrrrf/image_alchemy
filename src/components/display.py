@@ -10,7 +10,7 @@ from PyQt6.QtCore import Qt  # * for AlignmentFlag
 from components.workspace import Workspace
 from components.side_panel import SidePanel
 from config.globals import Assets
-9
+
 
 @dataclass
 class Display(QFrame):
@@ -52,10 +52,8 @@ class Display(QFrame):
         workspace_tabs = QTabWidget(self)  # Add a tab widget to the Display
         workspace_tabs.setProperty('class', 'workspace_tabs')
         workspace_tabs.setMovable(True)
-
         # * Print the name of the selected tab
         # workspace_tabs.currentChanged.connect(lambda index: print(f"Selected tab: {workspace_tabs.tabText(index)}"))
-
 
         # * New Tab button
         add_button = QPushButton(QIcon(Assets.ICONS.value+'sum.png'), '')
@@ -79,7 +77,8 @@ class Display(QFrame):
 
     def _close_tab(self, index: int):
         # TODO: Add a confirmation dialog (are you sure you want to close this tab?)
-        self.workspace_tabs.addTab(Workspace(), f'New') if self.workspace_tabs.count() == 1 else None,
+        if self.workspace_tabs.count() == 1:
+            self.workspace_tabs.addTab(Workspace(), f'New')
         self.workspace_tabs.removeTab(index)
         # print(f'Closed tab {index}')
 
@@ -90,7 +89,7 @@ class Display(QFrame):
             case Qt.KeyboardModifier.ControlModifier:
                 # print('Ctrl')
                 # print(event.key())
-                number = event.key() - 88 if event.key() == 94 else event.key() - 48  # * 94 is the key code of the number 0
+                number = event.key() - 88 if event.key() == 94 else event.key() - 48
                 match number:
                     case 30:  # N  # * Create a new tab
                         self.workspace_tabs.addTab(Workspace(), f'New_{self.workspace_tabs.count()+1}')
@@ -102,12 +101,16 @@ class Display(QFrame):
 
             # case Qt.KeyboardModifier.ShiftModifier:
             #     print('Shift')
+
             # case Qt.KeyboardModifier.AltModifier:
             #     print('Alt')
+
             # case Qt.KeyboardModifier.MetaModifier:
             #     print('Meta')
+
             # case Qt.KeyboardModifier.NoModifier:
             #     print('No modifier')
+
             # case _:
             #     print(f'Other modifier {event.key()}')
 
