@@ -34,19 +34,19 @@ class Visualizer(QLabel):
 
         # * Color the background
         self.bg_pixmap = QPixmap(self.width(), self.height())
-        self.bg_pixmap.fill(Qt.GlobalColor.transparent)
+        # self.bg_pixmap.fill(Qt.GlobalColor.transparent)
+        self.bg_pixmap.fill(Qt.GlobalColor.red)
 
         # template = '1x1'
         template = '2c'
-        # template = '2c1t'
-        # template = '2c2t'
-        template = '3r'
         # self.border = 32
         self.border = 16
-        # todo: fix the border behavior for some templates
-
         self.set_template(template)  # also set a default ImageBuffer
+        
+
+
         self.draw_images()
+        # self.save_image()  # * save the image (for testing purposes)
 
 
     def draw_images(self):
@@ -75,22 +75,6 @@ class Visualizer(QLabel):
             self.setFixedSize(self.width(), self.height())
 
 
-    # def set_delete_menu(self):
-    #     '''
-    #     Set the delete menu of a image buffer.
-    #     Each image buffer has a delete menu, which is a button that can be used to delete the image of the image buffer.
-    #     '''
-    #     # from src.components.image_buffer import active_buffer
-    #     # global active_buffer
-    #     for image in self.images:
-    #         self.delete_button = QPushButton(self)
-    #         self.delete_button.setText('X')
-    #         self.delete_button.move(image.x() + image.width() - self.delete_button.width(), image.y())
-    #         self.delete_button.clicked.connect(active_buffer.delete_image)
-    #     # self.delete_button.move(self.images[0].x() + self.images[0].width() - self.delete_button.width(), self.images[0].y())
-    #     # self.delete_button.hide()
-
-
     # * CREATE
     def save_image(self):
         '''
@@ -103,36 +87,12 @@ class Visualizer(QLabel):
             - img_path: `str`: the path of the image
         '''
         store_path = Assets.TEMP_IMAGES.value + 'stored_image.png'
-        match self.pixmap().save("test.png"):
+        match self.pixmap().save(store_path):
             case True:  # if the image is valid, show the image info
                 print(f"\033[32mSuccessfully\x1B[37m stored at: \033[34m{store_path}\x1B[37m")
             case False:  # if the image is not valid, show an error message
                 print(f"\033[31mError storing img\x1B[37m")
                 # print(self.pixmap())
-
-
-    # * UPDATE
-    def update_image(self) -> None:
-        '''
-        Set the image buffer to a specific image.
-        
-        ## Arguments:
-            - img_path: `str`: the path of the image
-        '''
-        pass
-        # height, width, _ = cv.imread(self.img_path).shape  # get the image info
-        # self.setFixedSize(width, height)  # update the size of the image buffer
-
-        # # Print the image info
-        # print(f"Selected: \033[32m{self.img_path}\x1B[37m")
-        # print(f"     Shape: ({height}, {width}) = {height*width} pixels")
-
-        # self.pix_data_map = QPixmap(self.img_path)  # Create a QPixmap object (contains image data)
-        # self.img = cv.imread(self.img_path)  # Create a np.ndarray object (contains image data)
-        # self.cost_matrix = get_cost_matrix(self.img)  # Create a np.ndarray object (contains cost matrix data)
-        # # self.draw_shapes(self.pix_data_map)  # ^ draw shapes on the image
-
-        # self.setPixmap(self.pix_data_map)  # set the image buffer to the selected image
 
 
     def mousePressEvent(self, event):
@@ -143,8 +103,6 @@ class Visualizer(QLabel):
             case _:
                 self.print_px_data(event)
 
-
-    # ^ SOME EXTRA FEATURES ---------------------------------------------
 
     def print_px_data(self, event):
         '''

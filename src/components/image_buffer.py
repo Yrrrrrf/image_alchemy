@@ -1,5 +1,6 @@
 # standard imports
 from dataclasses import dataclass
+from re import A
 
 # third-party imports
 from PyQt6.QtWidgets import QLabel, QMessageBox, QWidget, QFileDialog, QPushButton
@@ -27,26 +28,15 @@ class ImageBuffer(QLabel):
     import_button: QPushButton
     delete_button: QPushButton
     replace_button: QPushButton
+    img_path: str = Assets.TEST_IMAGES.value+'lenna.png'
 
 
     def __init__(self, parent: QWidget, width: int = 512, height: int = 512):
-        '''
-        Initialize the ImageBuffer class.
-
-        ## Arguments:
-            - parent: `QWidget`: the parent widget of the image buffer
-            - width: `int`: the width of the image buffer
-            - height: `int`: the height of the image buffer
-        '''
         super().__init__(parent)  # initialize the parent class
-        self.setFixedSize(width, height)
         self.setProperty('class', 'image_buffer')
-
-        # pixmap = QPixmap(Assets.TEST_IMAGES.value+'lenna_gray.png')
-        # pixmap = QPixmap(Assets.TEST_IMAGES.value+'lenna.png')
-        # self.setPixmap(pixmap)
-
+        self.setFixedSize(width, height)
         self._set_buttons()
+        # self.set_image()  # * set a default image (for testing purposes)
 
 
     # # * READ
