@@ -35,8 +35,7 @@ class ImageBuffer(QLabel):
         self.setProperty('class', 'image_buffer')
         self.setFixedSize(width, height)
         self._set_buttons()
-
-        # self._set_image()  # * set a default image (for testing purposes)
+        # self.set_image()  # * set a default i`mage (for testing purposes)
 
 
     # # * READ
@@ -63,11 +62,11 @@ class ImageBuffer(QLabel):
                 QMessageBox.critical(self, 'Error', 'Please select a file.')
             case _:  # if the image is valid, show the image info
                 self.img_path = img_path.split('image_alchemy')[1][1:]  # get the relative path of the selected image
-                self._set_image()
+                self.set_image()
 
 
     # * UPDATE
-    def _set_image(self):
+    def set_image(self):
         '''
         Set the image buffer to a specific image.
         
@@ -77,11 +76,9 @@ class ImageBuffer(QLabel):
         height, width, _ = cv.imread(self.img_path).shape  # get the image info
         print(f"Selected: \033[32m{self.img_path}\x1B[37m")
         print(f"     Shape: ({height}, {width}) = {height*width} pixels")
-        
+        self.setPixmap(QPixmap(self.img_path))  # set the image buffer to the selected image
         # self.setFixedSize(width, height)  # update the size of the image buffer
         # self.setScaledContents(True)  # strecth the image to fit the image buffer
-
-        self.setPixmap(QPixmap(self.img_path))  # set the image buffer to the selected image
 
         self.import_button.hide()
         self.delete_button.show()
@@ -109,7 +106,7 @@ class ImageBuffer(QLabel):
 
 
     # * Define an ImageBuffer button (import, replace, remove)
-    def _define_ib_button(self, icon_type: str, b_size: int = 72) -> QPushButton:
+    def _define_img_button(self, icon_type: str, b_size: int = 72) -> QPushButton:
         '''
         Define a button with a specific icon.
 
@@ -134,13 +131,13 @@ class ImageBuffer(QLabel):
         
         The buttons are defined in the ImageBuffer class but the Workspace is the one that handles the buttons.
         '''
-        self.import_button = self._define_ib_button('import')
+        self.import_button = self._define_img_button('import')
         self.import_button.clicked.connect(self.import_image)
         
-        self.delete_button = self._define_ib_button('remove', b_size=32)
+        self.delete_button = self._define_img_button('remove', b_size=32)
         self.delete_button.clicked.connect(self.remove_image)
         self.delete_button.hide()
 
-        self.replace_button = self._define_ib_button('replace', b_size=32)
+        self.replace_button = self._define_img_button('replace', b_size=32)
         self.replace_button.clicked.connect(self.import_image)
         self.replace_button.hide()

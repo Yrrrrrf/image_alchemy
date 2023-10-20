@@ -24,6 +24,8 @@ class Workspace(QTabWidget):
 
     Also it handles the buttons of the image buffer's. (RUD operations)
     '''
+    # This is an auxiliar variable to store the points of the trace (& manipulate them)
+    v_list: list[Visualizer]  # * list of visualizers (One for each tab)
 
 
     def __init__(self):
@@ -40,7 +42,10 @@ class Workspace(QTabWidget):
         self.tabCloseRequested.connect(self._close_tab)
 
         # * Set initial tabs
-        [self._new_tab() for _ in range(3)]
+        self.v_list = [self._new_tab() for _ in range(3)]
+
+        # for v in self.v_list:
+        #     print(type(v))
 
 
     def _new_tab(self):
@@ -48,33 +53,40 @@ class Workspace(QTabWidget):
         Create a new tab with a visualizer.
         Also set the buttons of the image buffer's inside the visualizer.
         '''
+        scroll_area = QScrollArea()
+        scroll_area.setProperty('class', 'scroll_area')
         scroll_zone = QWidget()
+        scroll_zone.setProperty('class', 'scroll_zone')
         visualizer = Visualizer(scroll_zone)
 
+        # scroll_zone_margin: int = 256
+        # scroll_zone.setFixedSize(visualizer.width() + 2 * scroll_zone_margin, visualizer.height() + 2 * scroll_zone_margin)
         scroll_zone.setFixedSize(visualizer.width() + 2 *self.width(), visualizer.height() + 2 * self.height())
         visualizer.move(scroll_zone.width() // 2 - visualizer.width() // 2, scroll_zone.height() // 2 - visualizer.height() // 2)
 
         # # * Add the visualizer to the scroll area
-        scroll_area = QScrollArea()
         scroll_area.setWidget(scroll_zone)   # Set the scroll zone as the widget of the scroll area
         scroll_area.setWidgetResizable(True)  # Make the scroll area resizable
-        # Activate the scroll bars
-        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-        # Set the scroll area to the center of the tab
-        scroll_area.horizontalScrollBar().setValue(scroll_zone.width() // 2 - visualizer.width() // 2 - 32)  # type: ignore
-        scroll_area.verticalScrollBar().setValue(scroll_zone.height() // 2 - visualizer.height() // 2 - 32)  # type: ignore
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 
+
+
+        # Set the scroll area to the center of the tab
+        initial_pos_margin: int = 32
+        scroll_area.verticalScrollBar().setValue(scroll_zone.height() // 2 - visualizer.height() // 2 - initial_pos_margin)  # type: ignore
+        scroll_area.horizontalScrollBar().setValue(scroll_zone.width() // 2 - visualizer.width() // 2 - initial_pos_margin)  # type: ignore
 
         # todo: Fix pos of the buttons
         # * Set the buttons of the image buffer's
         for img_buffer in visualizer.images:
-            # img_buffer.import_button.setParent(scroll_area)
             img_buffer.import_button.setParent(scroll_zone)
             img_buffer.import_button.move(  # Import button (Create)
                 visualizer.x() + img_buffer.x() + (img_buffer.width() - img_buffer.import_button.width()) // 2, 
-                visualizer.y() + img_buffer.y() + img_buffer.height() // 2
+                visualizer.y() + img_buffer.y() + (img_buffer.height()- img_buffer.import_button.height())// 2
             )
+            img_buffer.import_button.clicked.connect(lambda: img_buffer.set_image)
+
             img_buffer.delete_button.setParent(scroll_zone)
             img_buffer.delete_button.move(  # Delete button (Remove)
                 visualizer.x() + img_buffer.x() + img_buffer.width() - img_buffer.delete_button.width() - 4, 
@@ -85,15 +97,14 @@ class Workspace(QTabWidget):
                 visualizer.x() + img_buffer.x() + img_buffer.width() - 2 * img_buffer.delete_button.width() - 8, 
                 visualizer.y() + img_buffer.y() - img_buffer.delete_button.height() - 4
             )
-
-        # self.addTab(scroll_zone, f'New_{self.count()+1}')
         self.addTab(scroll_area, f'New_{self.count()+1}')
+        return visualizer
 
 
     def _close_tab(self, index: int):
         # TODO: Add a confirmation dialog (are you sure you want to close this tab?)
-        if self.count() == 1: self.addTab(Visualizer(self), f'New_{self.count()}')
-        self.removeTab(index)
+        self.removeTab(index)   # Remove the tab
+        if self.count() == 0: self._new_tab()  # If there are no tabs, create a new one
 
 
     # def mousePressEvent(self, event):

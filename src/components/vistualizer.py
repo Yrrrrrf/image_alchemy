@@ -27,7 +27,6 @@ class Visualizer(QLabel):
 
 
     def __init__(self, workspace: QWidget, template: str = '1x1', border: int = 0):
-    # def __init__(self, workspace: QFrame):
         super().__init__(workspace)
         self.setProperty('class', 'visualizer')
         self.setCursor(QCursor(Qt.CursorShape.CrossCursor))
@@ -36,14 +35,11 @@ class Visualizer(QLabel):
         # * Color the background
         self.bg_pixmap = QPixmap(self.width(), self.height())
         self.bg_pixmap.fill(Qt.GlobalColor.transparent)
-        # self.bg_pixmap.fill(Qt.GlobalColor.red)
 
-        template = '2c'
-        # self.border = 32
+        # template = '3r'
         self.border = 16
         self.set_template(template)  # also set a default ImageBuffer
         
-
         self.draw_images()
 
 

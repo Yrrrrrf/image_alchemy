@@ -110,21 +110,72 @@ QTabWidget::pane {  // this also belongs to the .workspace_tabs class but it doe
     border: 1px solid $light_accent_contr;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
-    padding: 8px;  // Adds space between the tabs and the workspace
+    // ^ probably the padding is not needed (i don't like how it looks)
+    padding: 4px;  // Adds space between the tabs and the workspace
+}
+
+
+.scroll_area,
+.scroll_zone
+{
+    background-color: $dark_base;
+    border: 0px solid $light_accent_contr;
 }
 // todo: Add a custom style for scroll bar of the Workspace
-// .QScrollBar:vertical,
-// .QScrollBar:horizontal {
-//     background: red;
-//     height: 15px;
-// }
 
-// .QScrollBar::handle:vertical,
-// .QScrollBar::handle:horizontal
+
+// .QScrollBar:vertical
 // {
-//     background: $dark_accent;
-//     min-height: 20px;
+//     width: 16px;
 // }
+// .QScrollBar:horizontal
+// {
+//     height: 16px;
+// }
+.QScrollBar:vertical,
+.QScrollBar:horizontal
+{  // This represents the scroll bar & the arrow buttons
+    // border: 10px solid $light_accent_contr;
+    background: transparent;
+}
+.QScrollBar::handle:vertical,
+.QScrollBar::handle:horizontal
+{  // This is the scroll bar itself
+    background: $light_accent_contr;
+    // border-radius: 20%;
+}
+.QScrollBar::add-page:vertical,
+.QScrollBar::sub-page:vertical,
+.QScrollBar::add-page:horizontal,
+.QScrollBar::sub-page:horizontal
+{  // This is the background of the scroll bar
+    background: $dark_base_faded;
+}
+// Arrow buttons
+.QScrollBar::up-arrow:vertical,
+.QScrollBar::down-arrow:vertical,
+.QScrollBar::left-arrow:horizontal,
+.QScrollBar::right-arrow:horizontal
+{
+    border: 2px solid $light_accent_contr;
+    // background: $light_accent_contr;
+    background: transparent;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // ? ------------------------------------------------------------------------------------------
