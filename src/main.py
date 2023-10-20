@@ -11,7 +11,7 @@ Author: Yrrrrrf
 from sys import exit, argv
 
 # third-party imports
-from PyQt6.QtWidgets import QApplication  # pip install PyQt6
+from PyQt6.QtWidgets import QApplication
 from PyQt6.QtCore import QTimer
 
 # local imports

@@ -15,7 +15,6 @@ from logic.intel_sc import *
 
 
 @dataclass
-# class ImageBuffer(QLabel, QPixmap):
 class ImageBuffer(QLabel):
     '''
     Image buffer class reference to the image buffer of the application.
@@ -28,7 +27,7 @@ class ImageBuffer(QLabel):
     import_button: QPushButton
     delete_button: QPushButton
     replace_button: QPushButton
-    img_path: str = Assets.TEST_IMAGES.value+'lenna.png'
+    img_path: str = Assets.TEST_IMAGES.value+'lenna.png'  # default image
 
 
     def __init__(self, parent: QWidget, width: int = 512, height: int = 512):
@@ -36,7 +35,8 @@ class ImageBuffer(QLabel):
         self.setProperty('class', 'image_buffer')
         self.setFixedSize(width, height)
         self._set_buttons()
-        # self.set_image()  # * set a default image (for testing purposes)
+
+        # self._set_image()  # * set a default image (for testing purposes)
 
 
     # # * READ
@@ -63,11 +63,11 @@ class ImageBuffer(QLabel):
                 QMessageBox.critical(self, 'Error', 'Please select a file.')
             case _:  # if the image is valid, show the image info
                 self.img_path = img_path.split('image_alchemy')[1][1:]  # get the relative path of the selected image
-                self.set_image()
+                self._set_image()
 
 
     # * UPDATE
-    def set_image(self) -> None:
+    def _set_image(self):
         '''
         Set the image buffer to a specific image.
         
@@ -86,6 +86,8 @@ class ImageBuffer(QLabel):
         self.import_button.hide()
         self.delete_button.show()
         self.replace_button.show()
+
+        # self.hide()  # hide the image buffer
 
 
     # * DELETE

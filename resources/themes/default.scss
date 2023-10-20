@@ -65,30 +65,7 @@ $light_hard_contr:   #98aba7;
 
 
 // * Workspace
-.workspace {
-    border: 1px solid $light_accent_contr;
-    background-color: $dark_base;
-    border-radius: 10%;
-
-}
-
-// todo: Modify the scroll bar style to make it look better
-// .QScrollBar:vertical,
-// .QScrollBar:horizontal {
-//     background: red;
-//     height: 15px;
-// }
-
-// .QScrollBar::handle:vertical,
-// .QScrollBar::handle:horizontal
-// {
-//     background: $dark_accent;
-//     min-height: 20px;
-// }
-
-
-// * Workspace Tabs
-.workspace_tabs
+.workspace
 {
     .QTabBar::tab
     {
@@ -135,6 +112,19 @@ QTabWidget::pane {  // this also belongs to the .workspace_tabs class but it doe
     border-bottom-right-radius: 10px;
     padding: 8px;  // Adds space between the tabs and the workspace
 }
+// todo: Add a custom style for scroll bar of the Workspace
+// .QScrollBar:vertical,
+// .QScrollBar:horizontal {
+//     background: red;
+//     height: 15px;
+// }
+
+// .QScrollBar::handle:vertical,
+// .QScrollBar::handle:horizontal
+// {
+//     background: $dark_accent;
+//     min-height: 20px;
+// }
 
 
 // ? ------------------------------------------------------------------------------------------

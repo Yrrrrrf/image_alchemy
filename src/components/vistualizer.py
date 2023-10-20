@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 
 # third-party imports
-from PyQt6.QtWidgets import QFrame, QLabel, QGridLayout
+from PyQt6.QtWidgets import QFrame, QLabel, QTabWidget, QWidget
 from PyQt6.QtCore import Qt, QRect, QSize, QPoint, QEvent
 from PyQt6.QtGui import QCursor, QPixmap, QImage, QPainter
 import cv2 as cv
@@ -21,11 +21,12 @@ class Visualizer(QLabel):
     This class contains one or more image buffer's, which are the images that are displayed in the workspace.
     The visualizer is the container of the image buffer's. 
     '''
+    bg_pixmap: QPixmap  # the main pixmap of the visualizer (This will be the image that will be saved)
     images: list[ImageBuffer]
     border: int = 0
 
 
-    def __init__(self, workspace: QFrame, template: str = '1x1', border: int = 0):
+    def __init__(self, workspace: QWidget, template: str = '1x1', border: int = 0):
     # def __init__(self, workspace: QFrame):
         super().__init__(workspace)
         self.setProperty('class', 'visualizer')
@@ -34,19 +35,16 @@ class Visualizer(QLabel):
 
         # * Color the background
         self.bg_pixmap = QPixmap(self.width(), self.height())
-        # self.bg_pixmap.fill(Qt.GlobalColor.transparent)
-        self.bg_pixmap.fill(Qt.GlobalColor.red)
+        self.bg_pixmap.fill(Qt.GlobalColor.transparent)
+        # self.bg_pixmap.fill(Qt.GlobalColor.red)
 
-        # template = '1x1'
         template = '2c'
         # self.border = 32
         self.border = 16
         self.set_template(template)  # also set a default ImageBuffer
         
 
-
         self.draw_images()
-        # self.save_image()  # * save the image (for testing purposes)
 
 
     def draw_images(self):
