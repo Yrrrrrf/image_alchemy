@@ -1,20 +1,19 @@
 # standard imports
 from dataclasses import dataclass
+from typing import Callable
 
 # third-party imports
-from PyQt6.QtWidgets import QFrame, QLabel, QTabWidget, QWidget
-from PyQt6.QtCore import Qt, QRect, QSize, QPoint, QEvent
-from PyQt6.QtGui import QCursor, QPixmap, QImage, QPainter
-import cv2 as cv
+from PyQt6.QtWidgets import QLabel, QTabWidget, QWidget
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QCursor, QPixmap
+# import cv2 as cv
 
 # local imports
 from components.image_buffer import ImageBuffer
 from config.globals import Assets
-from templates import templates
-# from templates import Templates
+from templates import Template
 
-# todo: Make the Visualizer scalable in size (also have to make the ImageBuffer scalable in size)
-# todo: think about the logic above
+
 @dataclass
 class Visualizer(QLabel):
     '''
@@ -23,50 +22,63 @@ class Visualizer(QLabel):
     '''
     bg_pixmap: QPixmap  # the main pixmap of the visualizer (This will be the image that will be saved)
     images: list[ImageBuffer]
-    border: int = 0
 
 
-    def __init__(self, workspace: QWidget, template: str = '1x1', border: int = 0):
+    def __init__(self, workspace: QWidget, width: int = 512, height: int = 512, border: int = 32):
         super().__init__(workspace)
+        from templates import Template  # ^ AVOID 'General Type Issues' warning (not really necessary)
+
         self.setProperty('class', 'visualizer')
         self.setCursor(QCursor(Qt.CursorShape.CrossCursor))
-        self.setMinimumSize(QSize(512, 512))
-
+        self.setFixedSize(width, height)
+        # self.setMargin(margin)  # Not uses because the QMargins can't be manipulated (paint on them)
+        self.images = []
+    
         # * Color the background
-        self.bg_pixmap = QPixmap(self.width(), self.height())
+        self.bg_pixmap = QPixmap(self.width() + border * 2, self.height() + border * 2)
         self.bg_pixmap.fill(Qt.GlobalColor.transparent)
+        self.setPixmap(self.bg_pixmap)
 
-        # template = '3r'
-        self.border = 16
-        self.set_template(template)  # also set a default ImageBuffer
-        
-        self.draw_images()
+        # * Set the template
+        template: Callable = Template.SQUARE
+        # template: Callable = Template.TWO_COLUMNS
 
+        self._set_template(template)  # also set a default ImageBuffer
+        self._set_template(template, border)  # also set a default ImageBuffer
 
-    def draw_images(self):
-        '''
-        Draw the images on the visualizer.
-        '''
-        # todo: paint the image on the Visualizer
-        painter = QPainter(self.bg_pixmap)
-        for image in self.images:
-            painter.drawPixmap(image.x(), image.y(), image.pixmap())
-            self.setPixmap(self.bg_pixmap)
+        # self.draw_images()
 
 
-    # def set_template(self, template: Templates) -> None:
-    def set_template(self, template: str) -> None:
+    def _set_template(self, template: Callable, border: int = 16):
         '''
         Set the template of the visualizer.
         The template is the layout of the image buffer's.
+
+        Set a new template will delete all the image buffer's and create new ones.
         '''
-        self.images = []
-        for coors in templates[template](self.width(), self.height(), self.border):
-            # print(coors)
+        for image in self.images:
+            image.close()
+            self.images.remove(image)
+
+        new_width, new_height = self.width() + border * 2, self.height() + border * 2
+        
+        for coors in template(new_width, new_height, border):
             self.images.append(ImageBuffer(self, coors[2], coors[3]))
-            self.images[-1].move(coors[0], coors[1])
-            # * Set the new size of the visualizer
-            self.setFixedSize(self.width(), self.height())
+            self.images[-1].move(coors[0], coors[1])  # Move the image buffer to the given coordinates
+
+        self.setFixedSize(new_width, new_height)  # * Set the new size of the visualizer
+
+
+    # def draw_images(self):
+    #     '''
+    #     Draw the images on the visualizer.
+    #     '''
+    #     # todo: paint the image on the Visualizer
+    #     painter = QPainter(self.bg_pixmap)
+    #     for image in self.images:
+    #         painter.drawPixmap(image.x(), image.y(), image.pixmap())
+    #         # QPainter(self.bg_pixmap).drawPixmap(image.x(), image.y(), image.pixmap())
+    #         self.setPixmap(self.bg_pixmap)
 
 
     # * CREATE
@@ -118,3 +130,8 @@ class Visualizer(QLabel):
         print(f"\033[38;2;{r};{g};{b}m({x:4}, {y:4})\033[0mpx = ", end="")
         print(f"\033[38;2;255;0;0m{r:3}\033[0m, \033[38;2;0;255;0m{g:3}\033[0m, \033[38;2;0;0;255m{b:3}\033[0m"
             , f", \033[38;2;0;0;0m{a:3}\033[0m" if a != 255 else "")
+
+        # PRINT SELF SIZE
+        # print(self.width(), self.height())
+        # # print size of the pixmap
+        # print(self.pixmap().width(), self.pixmap().height())

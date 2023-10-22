@@ -35,7 +35,8 @@ class ImageBuffer(QLabel):
         self.setProperty('class', 'image_buffer')
         self.setFixedSize(width, height)
         self._set_buttons()
-        # self.set_image()  # * set a default i`mage (for testing purposes)
+
+        # self.set_image()  # * set a default image (for testing purposes)
 
 
     # # * READ
@@ -83,8 +84,6 @@ class ImageBuffer(QLabel):
         self.import_button.hide()
         self.delete_button.show()
         self.replace_button.show()
-
-        # self.hide()  # hide the image buffer
 
 
     # * DELETE

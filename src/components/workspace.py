@@ -44,8 +44,13 @@ class Workspace(QTabWidget):
         # * Set initial tabs
         self.v_list = [self._new_tab() for _ in range(3)]
 
+        # V is a Visualizer
+        # -> parent: QWidget: scroll_zone
+        # -> parent: QScrollArea: scroll_area
+        # -> parent: QStackedWidget
+        # -> parent: Workspace (self)
         # for v in self.v_list:
-        #     print(type(v))
+            # print(type(v))
 
 
     def _new_tab(self):
@@ -53,12 +58,16 @@ class Workspace(QTabWidget):
         Create a new tab with a visualizer.
         Also set the buttons of the image buffer's inside the visualizer.
         '''
+        # * Instantiate the visualizer, the scroll zone & the scroll area
         scroll_area = QScrollArea()
         scroll_area.setProperty('class', 'scroll_area')
+        
         scroll_zone = QWidget()
         scroll_zone.setProperty('class', 'scroll_zone')
+
         visualizer = Visualizer(scroll_zone)
 
+        # * Set the visualizer to the center of the scroll zone
         # scroll_zone_margin: int = 256
         # scroll_zone.setFixedSize(visualizer.width() + 2 * scroll_zone_margin, visualizer.height() + 2 * scroll_zone_margin)
         scroll_zone.setFixedSize(visualizer.width() + 2 *self.width(), visualizer.height() + 2 * self.height())
@@ -70,9 +79,7 @@ class Workspace(QTabWidget):
         scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 
-
-
-        # Set the scroll area to the center of the tab
+        # * Set the scroll area to the center of the tab
         initial_pos_margin: int = 32
         scroll_area.verticalScrollBar().setValue(scroll_zone.height() // 2 - visualizer.height() // 2 - initial_pos_margin)  # type: ignore
         scroll_area.horizontalScrollBar().setValue(scroll_zone.width() // 2 - visualizer.width() // 2 - initial_pos_margin)  # type: ignore
@@ -92,11 +99,13 @@ class Workspace(QTabWidget):
                 visualizer.x() + img_buffer.x() + img_buffer.width() - img_buffer.delete_button.width() - 4, 
                 visualizer.y() + img_buffer.y() - img_buffer.delete_button.height() - 4
             )
+
             img_buffer.replace_button.setParent(scroll_zone)
             img_buffer.replace_button.move(  # Replace button (Update)
                 visualizer.x() + img_buffer.x() + img_buffer.width() - 2 * img_buffer.delete_button.width() - 8, 
                 visualizer.y() + img_buffer.y() - img_buffer.delete_button.height() - 4
             )
+
         self.addTab(scroll_area, f'New_{self.count()+1}')
         return visualizer
 

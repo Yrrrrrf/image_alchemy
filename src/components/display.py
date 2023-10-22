@@ -30,14 +30,22 @@ class Display(QFrame):
         self.setProperty('class', 'display')
 
         self.side_panel = SidePanel()
-        # self.workspace_tabs = Workspace()  # * 1 workspace
-        self.workspace = Workspace()  # * multiple workspaces
+        self.workspace = Workspace()
         
+
+        # Add a widget below the workspace
+        self.bottom_panel = QWidget()
+        self.bottom_panel.setProperty('class', 'bottom_panel')
+        self.bottom_panel.setMinimumHeight(64)
+        self.bottom_panel.setMaximumHeight(64)
+
+
+
+
         layout = QGridLayout()  # ? Set the layout distribution
         layout.addWidget(self.side_panel, 0, 0)  # * Expand and fill the space
         layout.addWidget(self.workspace, 0, 1)
-        # layout.addWidget(SidePanel(), 0, 2)  # Add a third column  (for testing purposes)
-        # layout.addWidget(SidePanel(), 0, 3)  # Add a fourth column (for testing purposes)
+
         self.setLayout(layout)
 
 
