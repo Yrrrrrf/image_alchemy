@@ -5,7 +5,6 @@ from dataclasses import dataclass
 from PyQt6.QtWidgets import QGridLayout, QFrame, QTabWidget, QPushButton, QWidget
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import Qt
-from components.vistualizer import Visualizer  # * for AlignmentFlag
 
 # local imports
 from components.workspace import Workspace
@@ -32,21 +31,21 @@ class Display(QFrame):
         self.side_panel = SidePanel()
         self.workspace = Workspace()
         
-
-        # Add a widget below the workspace
-        self.bottom_panel = QWidget()
-        self.bottom_panel.setProperty('class', 'bottom_panel')
-        self.bottom_panel.setMinimumHeight(64)
-        self.bottom_panel.setMaximumHeight(64)
-
-
-
-
         layout = QGridLayout()  # ? Set the layout distribution
         layout.addWidget(self.side_panel, 0, 0)  # * Expand and fill the space
         layout.addWidget(self.workspace, 0, 1)
 
         self.setLayout(layout)
+
+        # Get the current selected tab
+        # print(self.workspace.currentIndex())
+
+        # get the visualizer of the current tab
+        # print(self.workspace.v_list[self.workspace.currentIndex()])
+
+        # Access to the workspace & save the image
+        # self.workspace.v_list[0].save_image()
+        # self.workspace.v_list[0].save_image('siuuuuuuuuuuu.png')
 
 
     # * MANAGE ALL SHORTCUTS OF THE APPLICATION

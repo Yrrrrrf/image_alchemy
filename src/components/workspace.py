@@ -42,7 +42,10 @@ class Workspace(QTabWidget):
         self.tabCloseRequested.connect(self._close_tab)
 
         # * Set initial tabs
-        self.v_list = [self._new_tab() for _ in range(3)]
+        self.v_list = []
+        [self._new_tab() for _ in range(1)]
+
+        # print(self.v_list)
 
         # V is a Visualizer
         # -> parent: QWidget: scroll_zone
@@ -106,15 +109,16 @@ class Workspace(QTabWidget):
                 visualizer.y() + img_buffer.y() - img_buffer.delete_button.height() - 4
             )
 
-        self.addTab(scroll_area, f'New_{self.count()+1}')
-        return visualizer
+        self.addTab(scroll_area, f'New_{self.count()+1}')  # Add the scroll area to the tab widget
+        self.v_list.append(visualizer)  # * Add the visualizer to the list of visualizers
 
 
     def _close_tab(self, index: int):
         # TODO: Add a confirmation dialog (are you sure you want to close this tab?)
-        self.removeTab(index)   # Remove the tab
+        self.removeTab(index)   # Remove the tab from the tab widget
+        self.v_list.pop(index)  # * Remove the visualizer from the list of visualizers
         if self.count() == 0: self._new_tab()  # If there are no tabs, create a new one
-
+        
 
     # def mousePressEvent(self, event):
     #     '''
@@ -192,7 +196,6 @@ class Workspace(QTabWidget):
         #     painter.setPen(QColor(0, 0, 0))
         #     print(f"{last_x}, {last_y} -> {x}, {y}")
         #     painter.drawPoint(x, y)
-
         #     painter.end()  # ^ idk if this it's needed
 
         #     # self.trace_points.append((x, y))  # add the current mouse position to the trace points

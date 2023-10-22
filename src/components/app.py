@@ -3,8 +3,9 @@ from dataclasses import dataclass
 
 # Third-party imports
 from sass import compile  # compile the sass stylesheet
-from PyQt6.QtWidgets import QMainWindow
-from PyQt6.QtGui import QIcon
+from PyQt6.QtWidgets import QMainWindow, QMenuBar, QMenu
+from PyQt6.QtGui import QIcon, QAction
+from PyQt6.QtCore import Qt
 
 # Own imports
 from config.globals import *
@@ -44,9 +45,18 @@ class App(QMainWindow):
         self.display = Display()
         self.setCentralWidget(self.display)
 
-        # connect the mnenu bar to the workspace
-        # self.menu_bar.select_image.triggered.connect(self.display.workspace.image_buffer.import_image)
-        # self.menu_bar.save_image.triggered.connect(self.display.workspace.image_buffer.save_image)
+        # set a variable for the elements of the menu bar
+        # qmenus = self.menu_bar.findChildren(QMenu)
+        # for menu in qmenus:
+        #     print(menu.title())
+
+        qactions = self.menu_bar.findChildren(QAction)
+        # for action in qactions:
+        #     print(action.text())
+        # print(qactions)
+
+        qactions[3].triggered.connect(lambda: self.display.workspace.v_list[0].save_image())
+        print(qactions[3].text())
 
 
     def _set_theme(self, theme: str = 'default'):

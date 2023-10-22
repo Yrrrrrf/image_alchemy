@@ -24,7 +24,7 @@ class Visualizer(QLabel):
     images: list[ImageBuffer]
 
 
-    def __init__(self, workspace: QWidget, width: int = 512, height: int = 512, border: int = 32):
+    def __init__(self, workspace: QWidget, width: int = 512, height: int = 512, border: int = 0):
         super().__init__(workspace)
         from templates import Template  # ^ AVOID 'General Type Issues' warning (not really necessary)
 
@@ -32,33 +32,35 @@ class Visualizer(QLabel):
         self.setCursor(QCursor(Qt.CursorShape.CrossCursor))
         self.setFixedSize(width, height)
         # self.setMargin(margin)  # Not uses because the QMargins can't be manipulated (paint on them)
-        self.images = []
+
+        self.images = []  # * list of image buffer's
+        border = 16  # * Border of the visualizer
     
         # * Color the background
         self.bg_pixmap = QPixmap(self.width() + border * 2, self.height() + border * 2)
         self.bg_pixmap.fill(Qt.GlobalColor.transparent)
+        # self.bg_pixmap.fill(Qt.GlobalColor.white)
         self.setPixmap(self.bg_pixmap)
 
         # * Set the template
         template: Callable = Template.SQUARE
-        # template: Callable = Template.TWO_COLUMNS
+        # template: Callable = Template.COL_21
+        # template: Callable = Template.SQUARE_4
 
-        self._set_template(template)  # also set a default ImageBuffer
-        self._set_template(template, border)  # also set a default ImageBuffer
+        self._set_template(template, border)
 
         # self.draw_images()
 
 
-    def _set_template(self, template: Callable, border: int = 16):
+    def _set_template(self, template: Callable, border: int):
         '''
         Set the template of the visualizer.
         The template is the layout of the image buffer's.
 
         Set a new template will delete all the image buffer's and create new ones.
         '''
-        for image in self.images:
-            image.close()
-            self.images.remove(image)
+        [image.deleteLater() for image in self.images]  # Delete all the image buffer's
+        self.images.clear()  # Clear the list of image buffer's
 
         new_width, new_height = self.width() + border * 2, self.height() + border * 2
         
@@ -82,7 +84,7 @@ class Visualizer(QLabel):
 
 
     # * CREATE
-    def save_image(self):
+    def save_image(self, file_name: str = 'stored_image.png'):
         '''
         Save the image buffer to the file system.
         If the image is not valid, it will show an error message.
@@ -92,7 +94,7 @@ class Visualizer(QLabel):
         ## Arguments:
             - img_path: `str`: the path of the image
         '''
-        store_path = Assets.TEMP_IMAGES.value + 'stored_image.png'
+        store_path = Assets.TEMP_IMAGES.value + file_name
         match self.pixmap().save(store_path):
             case True:  # if the image is valid, show the image info
                 print(f"\033[32mSuccessfully\x1B[37m stored at: \033[34m{store_path}\x1B[37m")
