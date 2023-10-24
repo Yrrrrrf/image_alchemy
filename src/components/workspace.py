@@ -42,7 +42,7 @@ class Workspace(QTabWidget):
         self.tabCloseRequested.connect(self._close_tab)
 
         # * Set initial tabs
-        self.v_list = []
+        self.v_list = []  # * list of visualizers (One for each tab)
         [self._new_tab() for _ in range(1)]
 
         # print(self.v_list)
@@ -71,9 +71,8 @@ class Workspace(QTabWidget):
         visualizer = Visualizer(scroll_zone)
 
         # * Set the visualizer to the center of the scroll zone
-        # scroll_zone_margin: int = 256
-        # scroll_zone.setFixedSize(visualizer.width() + 2 * scroll_zone_margin, visualizer.height() + 2 * scroll_zone_margin)
-        scroll_zone.setFixedSize(visualizer.width() + 2 *self.width(), visualizer.height() + 2 * self.height())
+        scroll_zone_margin: int = 480  # * Margin of the scroll zone (out border of the visualizer)
+        scroll_zone.setFixedSize(visualizer.width() + 2 * scroll_zone_margin, visualizer.height() + 2 * scroll_zone_margin)
         visualizer.move(scroll_zone.width() // 2 - visualizer.width() // 2, scroll_zone.height() // 2 - visualizer.height() // 2)
 
         # # * Add the visualizer to the scroll area
@@ -127,16 +126,16 @@ class Workspace(QTabWidget):
     #     match event.buttons():
     #         # case _:
     #         case Qt.MouseButton.LeftButton:
-    #             self.image_buffer.print_px_data(event)
+    #             self.selected_image.print_px_data(event)
     #         # case Qt.MouseButton.RightButton:
     #             x, y = event.pos().x(), event.pos().y()
-    #             if x < self.image_buffer.width() and y < self.image_buffer.height():
+    #             if x < self.selected_image.width() and y < self.selected_image.height():
     #                 self.trace_points.append((x, y))  # add the point to the list
     #                 # r, g, b, _ = self.image_buffer.pixmap().toImage().pixelColor(x, y).getRgb()
     #                 # print(f"\033[38;2;{r};{g};{b}m({x:4}, {y:4})\033[0m")
 
     #                 # * Create a painter to draw on the image
-    #                 painter = QPainter(self.image_buffer.pix_data_map)
+    #                 painter = QPainter(self.selected_image.pix_data_map)
     #                 painter.setPen(QColor(0, 255, 0))
 
     #                 if len(self.trace_points) > 1:  # Do it only if there are at least 2 points
@@ -148,10 +147,10 @@ class Workspace(QTabWidget):
 
     #                     x_min = max(0, min(x_0, x_1) - margin)
     #                     y_min = max(0, min(y_0, y_1) - margin)
-    #                     x_max = min(self.image_buffer.width(), max(x_0, x_1) + margin)
-    #                     y_max = min(self.image_buffer.height(), max(y_0, y_1) + margin)
+    #                     x_max = min(self.selected_image.width(), max(x_0, x_1) + margin)
+    #                     y_max = min(self.selected_image.height(), max(y_0, y_1) + margin)
 
-    #                     roi = self.image_buffer.cost_matrix[y_min:y_max, x_min:x_max]
+    #                     roi = self.selected_image.cost_matrix[y_min:y_max, x_min:x_max]
 
     #                     for y, x in dijkstra(roi, (y_0-y_min, x_0-x_min), (y_1-y_min, x_1-x_min)):
     #                     # for y, x in find_minimum_cost_path(roi, (y_0-y_min, x_0-x_min), (y_1-y_min, x_1-x_min)):
@@ -164,19 +163,19 @@ class Workspace(QTabWidget):
     #                 painter.drawEllipse(self.trace_points[-1][0] - circle_size // 2 + 1, self.trace_points[-1][1] - circle_size // 2 + 1, circle_size - 2, circle_size - 2)
 
     #             # * Update the image
-    #             self.image_buffer.setPixmap(self.image_buffer.pix_data_map)
+    #             self.selected_image.setPixmap(self.selected_image.pix_data_map)
 
 
-    def mouseMoveEvent(self, event):
-        '''
-        Handle the mouse move event.
+    # def mouseMoveEvent(self, event):
+    #     '''
+    #     Handle the mouse move event.
 
-        This is only **active when the mouse is moving & any button is pressed**.
+    #     This is only **active when the mouse is moving & any button is pressed**.
 
-        ## Args:
-            - event (QMouseEvent): The mouse event that triggered the function.
-        '''
-
+    #     ## Args:
+    #         - event (QMouseEvent): The mouse event that triggered the function.
+    #     '''
+        # pass
         # todo: fix the scroll area movement
         # ^ this is just a prof of concept (it works but it's not perfect)
         # if event.buttons() == Qt.MouseButton.MiddleButton:
@@ -185,7 +184,6 @@ class Workspace(QTabWidget):
         #         v_bar = scroll_area.verticalScrollBar()
         #         v_bar.setValue(v_bar.value() - scroll_value)
 
-        pass
         # x, y = event.pos().x(), event.pos().y()
         # Make a line that follows the mouse since the last click
         # if x < self.image_buffer.width() and y < self.image_buffer.height():
