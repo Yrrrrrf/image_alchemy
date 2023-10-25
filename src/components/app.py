@@ -56,7 +56,11 @@ class App(QMainWindow):
         # print(qactions)
 
         qactions[3].triggered.connect(lambda: self.display.workspace.v_list[0].save_image())
-        print(qactions[3].text())
+        # print(qactions[3].text())
+        
+        # print(qactions[0].text())
+
+
 
 
     def _set_theme(self, theme: str = 'default'):

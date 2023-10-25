@@ -82,7 +82,8 @@ class Workspace(QTabWidget):
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 
         # * Set the scroll area to the center of the tab
-        initial_pos_margin: int = 32
+        # initial_pos_margin: int = 32
+        initial_pos_margin: int = 48
         scroll_area.verticalScrollBar().setValue(scroll_zone.height() // 2 - visualizer.height() // 2 - initial_pos_margin)  # type: ignore
         scroll_area.horizontalScrollBar().setValue(scroll_zone.width() // 2 - visualizer.width() // 2 - initial_pos_margin)  # type: ignore
 

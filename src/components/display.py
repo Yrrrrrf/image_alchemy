@@ -57,8 +57,9 @@ class Display(QFrame):
                 # print(event.key())
                 number = event.key() - 88 if event.key() == 94 else event.key() - 48
                 match number:
-                    case 30:  # N  # * Create a new tab
+                    case 30:  # N  # * Create a new tab & go to it
                         self.workspace._new_tab()
+                        self.workspace.setCurrentIndex(self.workspace.count() - 1)
                     case 39:  # W  # * Close the current tab
                         self.workspace._close_tab(self.workspace.currentIndex())
                     case _:  # * Go to the tab of the number

@@ -37,7 +37,7 @@ class Visualizer(QLabel):
         # self.setMargin(margin)  # Not uses because the QMargins can't be manipulated (paint on them)
 
         self.images = []  # * list of image buffer's
-        border = 16  # * Border of the visualizer
+        # border = 16  # * Border of the visualizer
 
         # * Color the background
         self.bg_pixmap = QPixmap(self.width() + border * 2, self.height() + border * 2)
@@ -46,8 +46,8 @@ class Visualizer(QLabel):
         self.setPixmap(self.bg_pixmap)
 
         # * Set the template
-        # template: Callable = Template.SQUARE
-        template: Callable = Template.COL_21
+        template: Callable = Template.SQUARE
+        # template: Callable = Template.COL_21
         # template: Callable = Template.SQUARE_4
 
         self._set_template(template, border)
@@ -71,7 +71,7 @@ class Visualizer(QLabel):
 
         self.setFixedSize(new_width, new_height)  # Set the new size of the visualizer
         self.selected_image = self.images[0]  # Set the selected image buffer
-        self.draw_selected_border()  # Draw the selected border
+        # self.draw_selected_border()  # Draw the selected border
 
 
     def draw_selected_border(self):
@@ -144,8 +144,8 @@ class Visualizer(QLabel):
                     # todo: Maybe this could be a new class (like a selector) that can select multiple images :O
 
                 # print(self.selected_image)
-                # print(type(self.selected_image))
-                self.update_selected_border()  # Update the selected border size & position
+                print(type(self.selected_image))
+                # self.update_selected_border()  # Update the selected border size & position
             case Qt.MouseButton.RightButton:
                 self.print_px_data(x, y)
             case _:
