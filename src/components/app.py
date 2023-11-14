@@ -3,9 +3,8 @@ from dataclasses import dataclass
 
 # Third-party imports
 from sass import compile  # compile the sass stylesheet
-from PyQt6.QtWidgets import QMainWindow, QMenuBar, QMenu
+from PyQt6.QtWidgets import QMainWindow, QMenu
 from PyQt6.QtGui import QIcon, QAction
-from PyQt6.QtCore import Qt
 
 # Own imports
 from config.globals import *
@@ -45,22 +44,8 @@ class App(QMainWindow):
         self.display = Display()
         self.setCentralWidget(self.display)
 
-        # set a variable for the elements of the menu bar
-        # qmenus = self.menu_bar.findChildren(QMenu)
-        # for menu in qmenus:
-        #     print(menu.title())
-
-        qactions = self.menu_bar.findChildren(QAction)
-        # for action in qactions:
-        #     print(action.text())
-        # print(qactions)
-
-        qactions[3].triggered.connect(lambda: self.display.workspace.v_list[0].save_image())
-        # print(qactions[3].text())
-        
-        # print(qactions[0].text())
-
-
+        # * Assign the actions to the menu bar
+        self.assign_actions()  # Set all the actions to their respective elements to apply the logic
 
 
     def _set_theme(self, theme: str = 'default'):
@@ -77,3 +62,22 @@ class App(QMainWindow):
         """
         with open(f"{Assets.THEMES.value}{theme}.scss", 'r') as file:
             self.setStyleSheet(compile(string=file.read()))
+
+
+    def assign_actions(self):
+        """
+        Assign the actions to the menu bar
+        """
+        # [print(menu.title()) for menu in self.menu_bar.findChildren(QMenu)]  # print the title of the menus
+        # * Get the actions of the menu bar
+        qactions = list(filter(lambda x: x.text() != "", self.menu_bar.findChildren(QAction)))
+        # [print(action.text()) for action in qactions]  # print the text of the actions
+
+        # * Add the behavior to the actions
+        # LOAD IMAGE
+        qactions[1].triggered.connect(lambda: self.display.workspace.v_list[self.display.workspace.currentIndex()].selected_image.import_image())
+        # REMOVE IMAGE
+        qactions[2].triggered.connect(lambda: self.display.workspace.v_list[self.display.workspace.currentIndex()].selected_image.remove_image())
+        # SAVE IMAGE
+        qactions[3].triggered.connect(lambda: self.display.workspace.v_list[0].save_image())
+

@@ -30,18 +30,19 @@ class MenuBar(QMenuBar):
         self.menu_bar_dict = {
             'File': [
                 {
-                    'name': 'Select Image',
+                    'name': 'Load Image',
                     'shortcut': 'Ctrl+O',
                     # 'function': lambda: print('Load image function')
                 },
                 {
-                    'name': 'Save Image',
-                    'shortcut': 'Ctrl+S',
+                    'name': 'Remove Image',
+                    'shortcut': 'Ctrl+R',
                     # 'function': lambda: print('Save image function')
                 },
                 {
                     'name': 'Save Image As',
-                    'shortcut': 'Ctrl+Shift+S'
+                    'shortcut': 'Ctrl+S'  # todo: check what is the shortcut for save as
+                    # 'shortcut': 'Ctrl+Shift+S'
                     # 'function': lambda: print('Save image as function')
                 },
                 {
@@ -132,6 +133,9 @@ class MenuBar(QMenuBar):
 
 
     def _print_menu_bar(self):
+        """
+        Print the menu bar to the console
+        """
         for menu in self.findChildren(QMenu):
             print(f"{menu.title()} {'='*(40 - len(menu.title()))}")
             for action in menu.actions():

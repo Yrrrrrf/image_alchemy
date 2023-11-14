@@ -1,18 +1,18 @@
 # standard imports
 from dataclasses import dataclass
-from types import NoneType
 from typing import Callable
 
 # third-party imports
-from PyQt6.QtWidgets import QLabel, QTabWidget, QWidget, QGridLayout
+from PyQt6.QtWidgets import QLabel, QWidget, QGridLayout
 from PyQt6.QtGui import QCursor, QPixmap, QPainter, QColor, QPen
 from PyQt6.QtCore import Qt
 # import cv2 as cv
 
 # local imports
+# from logic.intel_sc import *  # for intelligent scissors algorithm implementation
 from components.image_buffer import ImageBuffer
 from config.globals import Assets
-# from templates import Template
+from templates import Template
 
 
 @dataclass
@@ -27,9 +27,8 @@ class Visualizer(QLabel):
     selected_image: ImageBuffer  # the image buffer that is selected (the one that is on top)
 
 
-    def __init__(self, workspace: QWidget, width: int = 512, height: int = 512, border: int = 0):
+    def __init__(self, workspace: QWidget, width: int = 512, height: int = 512, border: int = 0, template: Callable = Template.SQUARE):
         super().__init__(workspace)
-        from templates import Template  # ^ AVOID 'General Type Issues' warning (not really necessary)
 
         self.setProperty('class', 'visualizer')
         self.setCursor(QCursor(Qt.CursorShape.CrossCursor))
@@ -37,7 +36,7 @@ class Visualizer(QLabel):
         # self.setMargin(margin)  # Not uses because the QMargins can't be manipulated (paint on them)
 
         self.images = []  # * list of image buffer's
-        # border = 16  # * Border of the visualizer
+        border = 16  # * Border of the visualizer
 
         # * Color the background
         self.bg_pixmap = QPixmap(self.width() + border * 2, self.height() + border * 2)
@@ -46,9 +45,8 @@ class Visualizer(QLabel):
         self.setPixmap(self.bg_pixmap)
 
         # * Set the template
-        template: Callable = Template.SQUARE
-        # template: Callable = Template.COL_21
-        # template: Callable = Template.SQUARE_4
+        # template = Template.COL_21
+        # template = Template.SQUARE_4
 
         self._set_template(template, border)
 
@@ -71,6 +69,8 @@ class Visualizer(QLabel):
 
         self.setFixedSize(new_width, new_height)  # Set the new size of the visualizer
         self.selected_image = self.images[0]  # Set the selected image buffer
+
+        # ^ Draw the selected border
         # self.draw_selected_border()  # Draw the selected border
 
 
@@ -91,7 +91,6 @@ class Visualizer(QLabel):
 
     def remove_selected_border(self):
         self.selected_border.deleteLater()
-
 
 
     def draw_images(self):
@@ -125,7 +124,6 @@ class Visualizer(QLabel):
                 print(f"\033[32mSuccessfully\x1B[37m stored at: \033[34m{store_path}\x1B[37m")
             case False:  # if the image is not valid, show an error message
                 print(f"\033[31mError storing img\x1B[37m")
-                # print(self.pixmap())
 
 
     def mousePressEvent(self, event):
@@ -138,14 +136,13 @@ class Visualizer(QLabel):
                 new_selected: ImageBuffer = self.childAt(x, y)  # type: ignore
                 # * If the new selected item is an ImageBuffer, set it as the selected_image
                 if type(new_selected) == ImageBuffer: self.selected_image = new_selected
-                # if type(self.selected_image) == NoneType:  # Means that pressed on the background (self)
-                #     pass
                     # todo: This could be like selecting all to aplly a filter to all the images
                     # todo: Maybe this could be a new class (like a selector) that can select multiple images :O
-
                 # print(self.selected_image)
                 print(type(self.selected_image))
                 # self.update_selected_border()  # Update the selected border size & position
+
+
             case Qt.MouseButton.RightButton:
                 self.print_px_data(x, y)
             case _:
@@ -170,10 +167,50 @@ class Visualizer(QLabel):
         print(f"\033[38;2;{r};{g};{b}m({x:4}, {y:4})\033[0mpx = ", end="")
         print(f"\033[38;2;255;0;0m{r:3}\033[0m, \033[38;2;0;255;0m{g:3}\033[0m, \033[38;2;0;0;255m{b:3}\033[0m"
             , f", \033[38;2;0;0;0m{a:3}\033[0m" if a != 255 else "")
-        
-        # x, y = event.pos().x(), event.pos().y()
-        # # if x < self.width() and y < self.height():
-        # r, g, b, a = self.pixmap().toImage().pixelColor(event.pos()).getRgb()
-        # print(f"\033[38;2;{r};{g};{b}m({x:4}, {y:4})\033[0mpx = ", end="")
-        # print(f"\033[38;2;255;0;0m{r:3}\033[0m, \033[38;2;0;255;0m{g:3}\033[0m, \033[38;2;0;0;255m{b:3}\033[0m"
-        #     , f", \033[38;2;0;0;0m{a:3}\033[0m" if a != 255 else "")
+
+
+    # def mousePressEvent(self, event):
+    #     '''
+    #     Print the pixel data of the image
+    #     '''
+    #     match event.buttons():
+    #         # case _:
+    #         case Qt.MouseButton.LeftButton:
+    #             self.selected_image.print_px_data(event)
+    #         # case Qt.MouseButton.RightButton:
+    #             x, y = event.pos().x(), event.pos().y()
+    #             if x < self.selected_image.width() and y < self.selected_image.height():
+    #                 self.trace_points.append((x, y))  # add the point to the list
+    #                 # r, g, b, _ = self.image_buffer.pixmap().toImage().pixelColor(x, y).getRgb()
+    #                 # print(f"\033[38;2;{r};{g};{b}m({x:4}, {y:4})\033[0m")
+
+    #                 # * Create a painter to draw on the image
+    #                 painter = QPainter(self.selected_image.pix_data_map)
+    #                 painter.setPen(QColor(0, 255, 0))
+
+    #                 if len(self.trace_points) > 1:  # Do it only if there are at least 2 points
+    #                     # * DRAW THE POINTS USING THE INTELIGENT SCISSORS ALGORITHM
+    #                     # Get an image of the region of interest (rectangle of the last 2 points) + margin
+    #                     margin = 60  # margin must be greater than 0 (otherwise it will crash)
+    #                     x_0, y_0 = self.trace_points[-1]  # last point
+    #                     x_1, y_1 = self.trace_points[-2]  # second to last point
+
+    #                     x_min = max(0, min(x_0, x_1) - margin)
+    #                     y_min = max(0, min(y_0, y_1) - margin)
+    #                     x_max = min(self.selected_image.width(), max(x_0, x_1) + margin)
+    #                     y_max = min(self.selected_image.height(), max(y_0, y_1) + margin)
+
+    #                     roi = self.selected_image.cost_matrix[y_min:y_max, x_min:x_max]
+
+    #                     for y, x in dijkstra(roi, (y_0-y_min, x_0-x_min), (y_1-y_min, x_1-x_min)):
+    #                     # for y, x in find_minimum_cost_path(roi, (y_0-y_min, x_0-x_min), (y_1-y_min, x_1-x_min)):
+    #                         painter.setPen(QColor(0, 255, 0))
+    #                         painter.drawPoint(x_min+x, y_min+y)
+
+    #                 circle_size: int = 10
+    #                 painter.setPen(QColor(0, 0, 255))  # Draw a circle on the last point
+    #                 painter.drawEllipse(self.trace_points[-1][0] - circle_size // 2, self.trace_points[-1][1] - circle_size // 2, circle_size, circle_size)
+    #                 painter.drawEllipse(self.trace_points[-1][0] - circle_size // 2 + 1, self.trace_points[-1][1] - circle_size // 2 + 1, circle_size - 2, circle_size - 2)
+
+    #             # * Update the image
+    #             self.selected_image.setPixmap(self.selected_image.pix_data_map)

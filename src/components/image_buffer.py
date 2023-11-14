@@ -4,7 +4,7 @@ from re import A
 
 # third-party imports
 from PyQt6.QtWidgets import QLabel, QMessageBox, QWidget, QFileDialog, QPushButton
-from PyQt6.QtGui import QPixmap, QImage, QIcon, QPainter, QColor
+from PyQt6.QtGui import QPixmap, QImage, QIcon, QPainter, QColor, QPen
 from PyQt6.QtCore import Qt, QSize
 import numpy as np
 import cv2 as cv
@@ -51,10 +51,11 @@ class ImageBuffer(QLabel):
         ## Returns:
             - bool: `True` if the image is valid, `False` otherwise
         '''
+        # todo: Make "lenna.png" the default image (selected when the dialog is opened)
         img_path = QFileDialog.getOpenFileName(self, 
             'Open File',  # title
             Assets.TEST_IMAGES.value,  # initial dir
-            'Image Files ( *.bmp  *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm)'  # filter
+            'Image Files (*.bmp  *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm)',  # filter
         )[0]  # get the path of the selected image
 
         match img_path:  # check if the image is valid
@@ -91,6 +92,7 @@ class ImageBuffer(QLabel):
         '''
         Remove the image buffer from the file system.
         '''
+        print(f"\033[31mRemoved\x1B[37m image (\033[34m{self.img_path}\x1B[37m)")
         self.img_path = ''
         self.pix_data_map = QPixmap(512, 512)
         self.pix_data_map.fill(Qt.GlobalColor.transparent)  # * This will be a pixmap with all values set as null (None)
@@ -100,8 +102,6 @@ class ImageBuffer(QLabel):
         self.delete_button.hide()
         self.import_button.show()
         self.replace_button.hide()
-
-        print(f"\033[32mSuccessfully\x1B[37m removed image")
 
 
     # * Define an ImageBuffer button (import, replace, remove)

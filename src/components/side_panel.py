@@ -4,7 +4,7 @@ from functools import partial  # ? To pass arguments to a function in a lambda e
 
 # third-party imports
 from PyQt6.QtWidgets import QFrame, QPushButton
-from PyQt6.QtCore import Qt, QSize, QEvent
+from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtGui import QIcon
 
 # local imports
@@ -25,18 +25,6 @@ class SidePanel(QFrame):  # QWidget, but temporary is a QFrame just for testing
         super().__init__()
         self.setProperty('class', 'side_panel')
         self.setMinimumWidth(self.margin*2 + self.buttons_size)  # set the initial size of the side bar (not expanded)
-        # * If the AlignmentFlag is set, the size of the widget is ignored
-        # * If it's not, the Height will be the minimum height of the widgets inside (0 if empty)
-        # This also need to 
-        # be stored as a variable to manipulate it later
-        # OperationsMenu(self)
-
-        # for i in range(5):
-        #     print(i)
-        #     s = SPButton(self, 'gallery', [{'name': 'Some', 'fn': lambda i: print(f'Some_{i}')}])
-        #     s.move(self.margin, self.margin + (i * (self.buttons_size + self.margin)))
-            # add an OperationMenu for each button
-
 
         for i in range(5):
             s = SPButton(self, 'gallery', [{'name': 'Some', 'fn': partial(lambda i: print(f'Some_{i}'), i)}])
@@ -71,7 +59,7 @@ class SPButton(QPushButton):
         self.setIcon(QIcon(Assets.ICONS.value+name.lower()+'.png'))
         self.setIconSize(QSize((int)(side_panel.buttons_size*0.8), (int)(side_panel.buttons_size*0.8)))
         self.setFixedSize(side_panel.buttons_size, side_panel.buttons_size)  # default size
-        self.clicked.connect(self.operations[0]['fn'])
+        self.clicked.connect(self.operations[0]['fn'])  # ? connect the button to the first operation
 
 
 # @dataclass
@@ -230,6 +218,3 @@ class SPButton(QPushButton):
 #             .setGeometry(SideBar.margin*2, self.title.height()+SideBar.margin*4+(i*(SideBar.margin+ops_size)), self.showing_size-SideBar.margin*4, ops_size)
 
 #         self.setFixedHeight(self.title.height()+((1+len(self.operations))*(SideBar.margin+ops_size)))
-
-
-

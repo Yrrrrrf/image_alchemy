@@ -38,7 +38,6 @@ def main() -> None:
             QTimer.singleShot(2000, loading_screen.close)  # Execute the main_window.show() function after 2 seconds
             QTimer.singleShot(2000, main_window.show)  # Execute the main_window.show() function after 2 seconds
         case False: main_window.show()  # Show the main window
-
     exit(app.exec())  # Execute the app
 
 
