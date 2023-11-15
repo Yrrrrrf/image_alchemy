@@ -130,6 +130,7 @@ dmypy.json
 # Own stuff
 resources/data/*
 resources/not/*
+resources/img/temp/*
 *.pdf
 log/*
 hcd/*

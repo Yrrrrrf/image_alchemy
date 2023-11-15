@@ -102,6 +102,7 @@ class ImageBuffer(QLabel):
         self.delete_button.hide()
         self.import_button.show()
         self.replace_button.hide()
+        # 
 
 
     # * Define an ImageBuffer button (import, replace, remove)
@@ -140,37 +141,3 @@ class ImageBuffer(QLabel):
         self.replace_button = self._define_img_button('replace', b_size=32)
         self.replace_button.clicked.connect(self.import_image)
         self.replace_button.hide()
-
-
-
-
-
-    # def mousePressEvent(self, event):
-    #     '''
-    #     Print the pixel data of the image
-    #     '''
-    #     match event.buttons():
-    #         case _:
-    #             self.print_px_data(event)
-
-
-    # def print_px_data(self, event):
-    #     '''
-    #     Print the pixel data of the image at the given event position.
-    #     Only if the click is inside the image.
-
-    #     ## Args:
-    #         - event (`QMouseEvent`): The mouse event that triggered the function.
-
-    #     Prints the pixel data of the image at the given event position to the console.
-    #     The pixel data is printed in the format (x, y)px = (r, g, b, a), where
-    #     (x, y) is the position of the pixel, (r, g, b, a) are the red, green, blue,
-    #     and alpha values of the pixel, respectively. The color values are printed
-    #     in RGB format, with each value ranging from 0 to 255.
-    #     '''
-    #     x, y = event.pos().x(), event.pos().y()
-    #     # if x < self.width() and y < self.height():
-    #     r, g, b, a = self.pixmap().toImage().pixelColor(event.pos()).getRgb()
-    #     print(f"\033[38;2;{r};{g};{b}m({x:4}, {y:4})\033[0mpx = ", end="")
-    #     print(f"\033[38;2;255;0;0m{r:3}\033[0m, \033[38;2;0;255;0m{g:3}\033[0m, \033[38;2;0;0;255m{b:3}\033[0m"
-    #         , f", \033[38;2;0;0;0m{a:3}\033[0m" if a != 255 else "")

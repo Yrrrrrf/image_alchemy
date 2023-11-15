@@ -19,7 +19,7 @@ from templates import Template
 class Visualizer(QLabel):
     '''
     This class contains one or more image buffer's, which are the images that are displayed in the workspace.
-    The visualizer is the container of the image buffer's. 
+    The visualizer is the container of the image buffer's.
     '''
     bg_pixmap: QPixmap  # the main pixmap of the visualizer (This will be the image that will be saved)
     images: list[ImageBuffer]
@@ -32,6 +32,9 @@ class Visualizer(QLabel):
 
         self.setProperty('class', 'visualizer')
         self.setCursor(QCursor(Qt.CursorShape.CrossCursor))
+        # width = 500
+        # height = 300
+        
         self.setFixedSize(width, height)
         # self.setMargin(margin)  # Not uses because the QMargins can't be manipulated (paint on them)
 
@@ -45,11 +48,12 @@ class Visualizer(QLabel):
         self.setPixmap(self.bg_pixmap)
 
         # * Set the template
-        # template = Template.COL_21
+        template = Template.COL_21
         # template = Template.SQUARE_4
 
         self._set_template(template, border)
 
+        self.update_pixmap()
 
     def _set_template(self, template: Callable, border: int):
         '''
@@ -93,15 +97,24 @@ class Visualizer(QLabel):
         self.selected_border.deleteLater()
 
 
-    def draw_images(self):
+    def update_pixmap(self):
         '''
         Draw the images on the visualizer.
         '''
         # todo: paint the image on the Visualizer
         # painter = QPainter(self.bg_pixmap)
         for image in self.images:
-            # painter.drawPixmap(image.x(), image.y(), image.pixmap())
+            # todo: draw it only if the image have a pixmap (or if it is not empty)
+            image.setPixmap(
+                image.pixmap().scaled(
+                    image.width(), 
+                    image.height(), 
+                    Qt.AspectRatioMode.IgnoreAspectRatio
+                )
+            )
+            # print(image.pixmap().width(), image.pixmap().height())
             QPainter(self.bg_pixmap).drawPixmap(image.x(), image.y(), image.pixmap())
+
             self.setPixmap(self.bg_pixmap)
 
 
@@ -116,7 +129,7 @@ class Visualizer(QLabel):
         ## Arguments:
             - img_path: `str`: the path of the image
         '''
-        self.draw_images()
+        self.update_pixmap()  # Update the pixmap of the visualizer (to save the image)
 
         store_path = Assets.TEMP_IMAGES.value + file_name
         match self.pixmap().save(store_path):
@@ -139,7 +152,7 @@ class Visualizer(QLabel):
                     # todo: This could be like selecting all to aplly a filter to all the images
                     # todo: Maybe this could be a new class (like a selector) that can select multiple images :O
                 # print(self.selected_image)
-                print(type(self.selected_image))
+                # print(type(self.selected_image))
                 # self.update_selected_border()  # Update the selected border size & position
 
 

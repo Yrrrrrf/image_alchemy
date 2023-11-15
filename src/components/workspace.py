@@ -123,3 +123,13 @@ class Workspace(QTabWidget):
         self.removeTab(index)   # Remove the tab from the tab widget
         self.v_list.pop(index)  # * Remove the visualizer from the list of visualizers
         if self.count() == 0: self._new_tab()  # If there are no tabs, create a new one
+
+
+    def update_visualizer_pixmap(self):
+        """
+        Update the pixmap of the visualizer.
+        """
+        for v in self.v_list:
+            v.update_pixmap()
+
+        
