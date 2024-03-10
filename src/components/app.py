@@ -80,4 +80,3 @@ class App(QMainWindow):
         qactions[2].triggered.connect(lambda: self.display.workspace.v_list[self.display.workspace.currentIndex()].selected_image.remove_image())
         # SAVE IMAGE
         qactions[3].triggered.connect(lambda: self.display.workspace.v_list[0].save_image())
-

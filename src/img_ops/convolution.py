@@ -148,7 +148,7 @@ def move_left(img) -> np.ndarray:
 
 if __name__ == '__main__':
     # * Load image
-    path = 'resources\\img\\lena.png'
+    path = '.\\..\\resources\\img\\test\\lennna.png'
     img = cv2.imread(path)
 
     # * Test Convolutions
