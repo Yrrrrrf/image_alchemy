@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from PyQt6.QtWidgets import QScrollArea, QTabWidget, QPushButton, QWidget
 from PyQt6.QtGui import QIcon, QPainter, QColor, QPen
 from PyQt6.QtCore import QSize, Qt
+from numpy import add
 
 # local imports
 from config.globals import Assets
@@ -29,9 +30,12 @@ class Workspace(QTabWidget):
         self.setMovable(True)
         # self.setMouseTracking(True)
         # * New Tab button
-        add_button = QPushButton(QIcon(Assets.ICONS.value+'sum.png'), '')
+        # add_button = QPushButton(QIcon(Assets.ICONS.value+'sum.png'), '')
+        add_button = QPushButton()
         add_button.clicked.connect(self._new_tab)
+        add_button.setProperty('class', 'add_button')
         self.setCornerWidget(add_button, Qt.Corner.TopRightCorner)
+
         # * Close Tab button
         self.setTabsClosable(True)
         self.tabCloseRequested.connect(self._close_tab)
@@ -83,6 +87,17 @@ class Workspace(QTabWidget):
         scroll_area.horizontalScrollBar().setValue(scroll_zone.width() // 2 - visualizer.width() // 2 - initial_pos_margin)  # type: ignore
 
         # * Set the buttons of the image buffer's
+
+        coords = [
+        #     lambda v, img_b, ib, import_b: (
+        #         v.x() + ib.x() + (ib.width() - ib.import_button.width()) // 2, 
+        #         v.y() + ib.y() + (ib.height()- ib.import_button.height())// 2
+        #     )
+            # visualizer.x() + img_buffer.x() + img_buffer.width() - i *img_buffer.delete_button.width() - 4, 
+            # # A i that belongs to [0, 1, 2]
+            # visualizer.y() + img_buffer.y() + 4,
+        ]
+
         for img_buffer in visualizer.images:
             # * Import button
             img_buffer.import_button.setParent(scroll_zone)
@@ -95,13 +110,13 @@ class Workspace(QTabWidget):
             img_buffer.delete_button.setParent(scroll_zone)
             img_buffer.delete_button.move(  # Delete button (Remove)
                 visualizer.x() + img_buffer.x() + img_buffer.width() - img_buffer.delete_button.width() - 4, 
-                visualizer.y() + img_buffer.y() - img_buffer.delete_button.height() - 4
+                visualizer.y() + img_buffer.y() + 4
             )
             # * Replace button
             img_buffer.replace_button.setParent(scroll_zone)
             img_buffer.replace_button.move(  # Replace button (Update)
                 visualizer.x() + img_buffer.x() + img_buffer.width() - 2 * img_buffer.delete_button.width() - 8, 
-                visualizer.y() + img_buffer.y() - img_buffer.delete_button.height() - 4
+                visualizer.y() + img_buffer.y() + 4
             )
 
         # * Add the scroll area to the tab widget

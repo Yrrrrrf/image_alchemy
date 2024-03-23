@@ -34,8 +34,12 @@ class Assets(Enum):
     # * So, I'll have to change it to a forward slash
     ICONS = "resources/img/static/"
     TEST_IMAGES = "resources/img/test/"
-    TEMP_IMAGES = "resources/img/temp/"
+    TEMP_IMAGES = "resources/temp/"
     THEMES = "resources/themes/"
+    COLOR_SCHEMA = "resources/colors/"
+    
+    # todo: Check why using `str` as the type of the last enum value is causing an error
+    # COLOR_SCHEMA: str = "resources/color_schemes/"
     # Fonts
     # Sounds
     # Music

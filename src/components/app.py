@@ -2,9 +2,10 @@
 from dataclasses import dataclass
 
 # Third-party imports
-from sass import compile  # compile the sass stylesheet
+import sass
+
 from PyQt6.QtWidgets import QMainWindow, QMenu
-from PyQt6.QtGui import QIcon, QAction
+from PyQt6.QtGui import QIcon, QAction, QKeySequence, QShortcut
 
 # Own imports
 from config.globals import *
@@ -34,9 +35,6 @@ class App(QMainWindow):
 
         self.setMouseTracking(True)  # track mouse even when not clicking
         # self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)  # focus on the window
-        # * Set a stylesheet for the app
-        self._set_theme('default')
-        # self._set_theme('dev')
 
         self.menu_bar = MenuBar()
         self.setMenuBar(self.menu_bar)
@@ -44,24 +42,56 @@ class App(QMainWindow):
         self.display = Display()
         self.setCentralWidget(self.display)
 
+
+        # * Set the color scheme
+        # todo: add some kind of Color Scheme Manager (like the Theme Manager)
+        # self._set_color_scheme('default')
+
+        # * Set a stylesheet for the app
+        # todo: add some kind of Theme Manager (like the Color Scheme Manager)
+        self._set_theme()
+        # self._set_theme('main')  # empty for now...
+        # self.setup_shortcuts()
+
+
         # * Assign the actions to the menu bar
         self.assign_actions()  # Set all the actions to their respective elements to apply the logic
 
 
-    def _set_theme(self, theme: str = 'default'):
-        """
-        Load the stylesheet from the sass file
+    # def _set_color_scheme(self, schema: str = 'default'):
+    #     """
+    #     Load the stylesheet from the sass file
 
-        # Arguments
-            theme (str): the name of the theme to load
+    #     # Arguments
+    #         theme (str): the name of the theme to load
 
-        # Theme names
-            - `default`: the default theme
-            - `dark`: the dark theme (not implemented yet)
-            - `dev`: the development theme (not implemented yet)
+    #     # Theme names
+    #         - `default`: the default theme
+    #         - `dark`: the dark theme (not implemented yet)
+    #         - `dev`: the development theme (not implemented yet)
+    #     """
+    #     with open(f"{Assets.THEMES.value}{schema}.scss", 'r') as file:
+    #         self.setStyleSheet(compile(string=file.read()))
+
+
+
+    def _set_theme(self, theme: str = 'dev'):
         """
-        with open(f"{Assets.THEMES.value}{theme}.scss", 'r') as file:
-            self.setStyleSheet(compile(string=file.read()))
+        Load the stylesheet from the sass file based on the selected theme.
+
+        Arguments:
+            theme (str): the name of the theme to load, e.g., 'light' or 'dark'
+        """
+        try:
+            with open(f"{Assets.THEMES.value}{theme}.scss", 'r') as file:
+                self.setStyleSheet(sass.compile(string=file.read(),  # read the content of the file
+                    include_paths=[
+                        Assets.THEMES.value, 
+                        Assets.COLOR_SCHEMA.value
+                    ]  # set the include path
+                ))
+        except Exception as e:
+            print(f"\033[31m{e}\x1B[37m")
 
 
     def assign_actions(self):

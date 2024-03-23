@@ -1,11 +1,12 @@
 # standard imports
 from dataclasses import dataclass
+from os import remove
 from re import A
 
 # third-party imports
 from PyQt6.QtWidgets import QLabel, QMessageBox, QWidget, QFileDialog, QPushButton
 from PyQt6.QtGui import QPixmap, QImage, QIcon, QPainter, QColor, QPen
-from PyQt6.QtCore import Qt, QSize
+from PyQt6.QtCore import Qt, QSize, QTimer
 import numpy as np
 import cv2 as cv
 
@@ -36,8 +37,21 @@ class ImageBuffer(QLabel):
         self.setFixedSize(width, height)
         self._set_buttons()
 
+        self.setMouseTracking(True)
+
         # self.set_image()  # * set a default image (for testing purposes)
 
+    def mouseMoveEvent(self, event):
+        if not self.import_button.isVisible():
+            self.replace_button.show()
+            self.delete_button.show()
+
+    def leaveEvent(self, event):
+        QTimer.singleShot(3000, self.hide_buttons)
+
+    def hide_buttons(self):
+        self.replace_button.hide()
+        self.delete_button.hide()
 
     # # * READ
     def import_image(self):
@@ -66,7 +80,6 @@ class ImageBuffer(QLabel):
                 self.img_path = img_path.split('image_alchemy')[1][1:]  # get the relative path of the selected image
                 self.set_image()
 
-
     # * UPDATE
     def set_image(self):
         '''
@@ -81,10 +94,7 @@ class ImageBuffer(QLabel):
         self.setPixmap(QPixmap(self.img_path))  # set the image buffer to the selected image
         # self.setFixedSize(width, height)  # update the size of the image buffer
         self.setScaledContents(True)  # strecth the image to fit the image buffer
-
         self.import_button.hide()
-        self.delete_button.show()
-        self.replace_button.show()
 
 
     # * DELETE
@@ -99,29 +109,7 @@ class ImageBuffer(QLabel):
         self.setPixmap(self.pix_data_map)
 
         #  * Update the buttons state
-        self.delete_button.hide()
         self.import_button.show()
-        self.replace_button.hide()
-        # 
-
-
-    # * Define an ImageBuffer button (import, replace, remove)
-    def _define_img_button(self, icon_type: str, b_size: int = 72) -> QPushButton:
-        '''
-        Define a button with a specific icon.
-
-        ## Arguments:
-            - icon_type: the type of the icon (import, replace, remove)
-
-        ## Returns:
-            - the button instance
-        '''
-        button = QPushButton()
-        button.setIcon(QIcon(Assets.ICONS.value+icon_type+'.png'))
-        button.setIconSize(QSize((int)(b_size*0.8), (int)(b_size*0.8)))
-        button.setFixedSize(b_size, b_size)
-        button.setStyleSheet('QPushButton {background-color: white; border: 1px solid white; border-radius: 10%;} QPushButton:hover{background-color : lightgray;}')
-        return button
 
 
     # * Set interaction Buttons (import, replace, remove)
@@ -131,13 +119,34 @@ class ImageBuffer(QLabel):
         
         The buttons are defined in the ImageBuffer class but the Workspace is the one that handles the buttons.
         '''
-        self.import_button = self._define_img_button('import')
+        self.import_button = _define_img_button('import')
         self.import_button.clicked.connect(self.import_image)
         
-        self.delete_button = self._define_img_button('remove', b_size=32)
+        self.delete_button = _define_img_button('remove', b_size=32)
         self.delete_button.clicked.connect(self.remove_image)
         self.delete_button.hide()
 
-        self.replace_button = self._define_img_button('replace', b_size=32)
+        self.replace_button = _define_img_button('replace', b_size=32)
         self.replace_button.clicked.connect(self.import_image)
         self.replace_button.hide()
+
+# * Define an ImageBuffer button (import, replace, remove)
+def _define_img_button(action: str, b_size: int = 72) -> QPushButton:
+    '''
+    Define a button with a specific icon.
+
+    ## Arguments:
+        - icon_type: the type of the icon (import, replace, remove)
+
+    ## Returns:
+        - the button instance
+    '''
+    button = QPushButton()
+    button.setProperty('class', f"{action}_button")
+    button.setIcon(QIcon(Assets.ICONS.value+action+'.png'))
+    button.setIconSize(QSize((int)(b_size*0.8), (int)(b_size*0.8)))
+    button.setFixedSize(b_size, b_size)
+    # button.setStyleSheet('QPushButton {background-color: white; border: 1px solid white; border-radius: 10%;} QPushButton:hover{background-color : lightgray;}')
+    return button
+
+

@@ -39,6 +39,8 @@ To be sure that everything is working as expected, run the tests.
 python -m unittest discover -s src/tests -p test_*.py  # run all tests in src/tests
 ```
 
+![sample](./resources/img/sample.png)
+
 ## References
 - [Interactive IS (cv)](https://docs.opencv.org/4.x/d9/df5/tutorial_js_intelligent_scissors.html) Interactive Intelligent Scissors using OpenCV
 - [Intelligent Scissors for Image Composition](./log/IS%20for%20image%20composition.pdf) (Original paper)
